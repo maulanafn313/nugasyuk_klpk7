@@ -1,0 +1,1 @@
+<img src="{{ asset('images/animasi mahasiswa.png') }}" alt="animasi mahasiswa" class="object-cover object-top w-full h-full">
