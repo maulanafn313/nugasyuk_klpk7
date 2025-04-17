@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('role', ['owner', 'editor', 'viewer'])->default('editor');
+            $table->enum('role', ['editor', 'viewer'])->default('editor');
             $table->timestamps();
         });
     }

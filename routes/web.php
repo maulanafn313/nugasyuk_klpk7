@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\CreateScheduleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,12 +25,16 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'userMiddleware'])->group(function()
 {
     Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('view-schedule', [ScheduleController::class, 'index'])->name('user.view-schedule');
+    Route::get('create-schedule', [CreateScheduleController::class, 'index'])->name('user.create-schedule');
+    Route::post('create-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
+    // Route::get('history-schedule', [ScheduleController::class, 'index'])->name('user.history-schedule');
 });
 
 //route middleware untuk admin
 Route::middleware(['auth', 'adminMiddleware'])->group(function()
 {
-    Route::get('admin/dashboard', [UserController::class, 'index'])->name('admin.dashboard');
+    Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
 

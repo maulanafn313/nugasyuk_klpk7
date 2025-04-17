@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('priority',['important', 'very important', 'not important']);
             $table->dateTime('start_schedule');
             $table->dateTime('due_schedule');
-            $table->dateTime('before_start_schedule');
+            $table->dateTime('before_due_schedule');
             $table->string('upload_file');
             $table->string('url');
             $table->text('description');

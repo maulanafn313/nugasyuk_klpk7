@@ -24,7 +24,7 @@ class ScheduleFactory extends Factory
             'priority' => $this->faker->randomElement(['important','very important', 'not important']),
             'start_schedule' => $this->faker->dateTimeBetween('now', '+1 week'),
             'due_schedule' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
-            'before_start_schedule' => $this->faker->dateTimeBetween('now', '+1 week'),
+            'before_due_schedule' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
             'upload_file' => $this->faker->randomElement(['file1.pdf', 'file2.docx', 'file3.jpg']),
             'url' => $this->faker->url(),
             'description' => $this->faker->paragraph(),

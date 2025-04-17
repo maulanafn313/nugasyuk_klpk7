@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-blue-300 border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -7,7 +7,8 @@
                 <div class="shrink-0 flex items-center">
                     <a href="{{ Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard') }}">
                         {{-- <x-application-logo class="block h-9 w-auto fill-current text-gray-800" /> --}}
-                        <img src="{{ asset('images/logo nugasyuk.png') }}" alt="logo nugasyuk" class="block h-9 w-auto fill-current text-gray-800">
+                        {{-- <img src="{{ asset('images/logo nugasyuk.png') }}" alt="logo nugasyuk" class="block h-9 w-auto fill-current text-gray-800"> --}}
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
@@ -20,8 +21,28 @@
                     {{-- admin links --}}
                     @if(Auth::user()->role == 'admin')
                         <x-nav-link href="admin/userManagement" :active=" request()->routeIs('admin.userManagement')">
-                            {{ __('UserManagement') }}
+                            {{ __('User Management') }}
                         </x-nav-link>
+                    @endif
+
+                    {{-- user links --}}
+                    @if(Auth::user()->role == 'user')
+
+                    <x-nav-link href="create-schedule" :active="request()->routeIs('user.create-schedule')">
+                        {{ __('Create Schedule') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="view-schedule" :active="request()->routeIs('user.view-schedule')">
+                        {{ __('View Schedule') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="calendar" :active="request()->routeIs('user.calendar')">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
+                    
+                    <x-nav-link href="history-schedule" :active="request()->routeIs('user.history-schedule')">
+                        {{ __('History Schedule') }}
+                    </x-nav-link>
                     @endif
 
                 </div>
@@ -76,9 +97,29 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard')" :active="Auth::user()->role == 'admin' ? request()->routeIs('admin.dashboard') : request()->routeIs('dashboard') ">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            {{-- user links --}}
+            @if(Auth::user()->role == 'user')
+                <x-responsive-nav-link href="schedule" :active=" request()->routeIs('schedule')">
+                    {{ __('Create Schedule') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="view-schedule" :active=" request()->routeIs('user.view-schedule')">
+                    {{ __('View Schedule') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="history-schedule" :active=" request()->routeIs('schedule')">
+                    {{ __('History Schedule') }}
+                </x-responsive-nav-link>
+            @endif
+
+            {{-- admin links --}}
+            @if(Auth::user()->role == 'admin')
+                <x-responsive-nav-link href="admin/userManagement" :active=" request()->routeIs('admin.userManagement')">
+                    {{ __('UserManagement') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
