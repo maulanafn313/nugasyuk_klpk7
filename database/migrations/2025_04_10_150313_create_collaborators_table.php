@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('collaborators', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('schedule_id');
-            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('role', ['editor', 'viewer'])->default('editor');
+            $table->foreignId('user_id')
+                    ->constrained('users')
+                    ->onDelete('cascade');
+            $table->foreignId('schedule_id')
+                    ->constrained('schedules')
+                    ->onDelete('cascade');
+            $table->enum('role', ['owner', 'editor', 'viewer'])->default('viewer');
             $table->timestamps();
+            $table->unique(['schedule_id','user_id']);
         });
     }
 
@@ -29,4 +32,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('collaborators');
     }
-};
+}; 

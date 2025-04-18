@@ -17,7 +17,7 @@ class Schedule extends Model
         'priority',
         'start_schedule',
         'due_schedule',
-        'before_start_schedule',
+        'before_due_schedule',
         'upload_file',
         'url',
         'description',

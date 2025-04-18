@@ -27,7 +27,7 @@ Route::middleware(['auth', 'userMiddleware'])->group(function()
     Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::get('view-schedule', [ScheduleController::class, 'index'])->name('user.view-schedule');
     Route::get('create-schedule', [CreateScheduleController::class, 'index'])->name('user.create-schedule');
-    Route::post('create-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
+    Route::post('store-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
     // Route::get('history-schedule', [ScheduleController::class, 'index'])->name('user.history-schedule');
 });
 

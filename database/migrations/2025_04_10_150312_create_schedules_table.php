@@ -17,12 +17,12 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('schedule_name');
             $table->enum('schedule_category',['task', 'activities']);
-            $table->enum('priority',['important', 'very important', 'not important']);
+            $table->enum('priority',['important', 'very_important', 'not_important']);
             $table->dateTime('start_schedule');
             $table->dateTime('due_schedule');
             $table->dateTime('before_due_schedule');
-            $table->string('upload_file');
-            $table->string('url');
+            $table->string('upload_file')->nullable();
+            $table->string('url')->nullable();
             $table->text('description');
             $table->enum('status', ['to-do','processed', 'completed', 'overdue']);
             $table->timestamps();

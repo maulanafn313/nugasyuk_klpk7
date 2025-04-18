@@ -19,16 +19,16 @@ class ScheduleFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'schedule_name' => $this->faker->sentence(3),
-            'schedule_category' => $this->faker->randomElement(['task', 'activities']),
-            'priority' => $this->faker->randomElement(['important','very important', 'not important']),
-            'start_schedule' => $this->faker->dateTimeBetween('now', '+1 week'),
-            'due_schedule' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
-            'before_due_schedule' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
-            'upload_file' => $this->faker->randomElement(['file1.pdf', 'file2.docx', 'file3.jpg']),
-            'url' => $this->faker->url(),
-            'description' => $this->faker->paragraph(),
-            'status' => $this->faker->randomElement(['to-do','processed', 'completed', 'overdue']),
+            'schedule_name' => fake()->sentence(3),
+            'schedule_category' => fake()->randomElement(['task', 'activities']),
+            'priority' => fake()->randomElement(['important', 'very_important', 'not_important']),
+            'start_schedule' => now()->addDays(rand(1, 5)),
+            'due_schedule' => now()->addDays(rand(6, 10)),
+            'before_due_schedule' => now()->addDays(rand(5, 6)),
+            'upload_file' => fake()->filePath(),
+            'url' => fake()->url(),
+            'description' => fake()->paragraph(),
+            'status' => fake()->randomElement(['to-do','processed', 'completed', 'overdue']),
         ];
     }
 }

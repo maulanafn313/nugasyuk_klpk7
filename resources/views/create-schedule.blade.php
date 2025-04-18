@@ -1,147 +1,204 @@
 <x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Create Schedule') }}
+        </h2>
+    </x-slot>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h2 class="text-2xl font-bold mb-6">Create New Schedule</h2>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <form action="{{ route('user.store-schedule') }}" method="post" enctype="multipart/form-data">
+                    @csrf
                     
-                    <form action="{{ route('user.store-schedule') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                        @csrf
+                    <!-- Basic Information Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-4">Basic Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="schedule_name" class="block text-sm font-medium text-blue-700 mb-2">Schedule Name</label>
+                                <input type="text" name="schedule_name" id="schedule_name" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    value="{{ old('schedule_name') }}" @error('schedule_name') is-invalid @enderror>
+                                @error('schedule_name')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+    
+                            <div>
+                                <label for="schedule_category" class="block text-sm font-medium text-blue-700 mb-2">Schedule Category</label>
+                                <select name="schedule_category" id="schedule_category" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Select Schedule Category</option>
+                                    <option value="task" {{ old('schedule_category') == 'task' ? 'selected' : '' }}>Task</option>
+                                    <option value="activities" {{ old('schedule_category') == 'activities' ? 'selected' : '' }}>Activities</option>
+                                </select>
+                                @error('schedule_category')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+    
+                            <div>
+                                <label for="priority" class="block text-sm font-medium text-blue-700 mb-2">Priority</label>
+                                <select name="priority" id="priority" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Select Priority</option>
+                                    <option value="very_important" {{ old('priority') == 'very_important' ? 'selected' : '' }}>Very Important</option>
+                                    <option value="important" {{ old('priority') == 'important' ? 'selected' : '' }}>Important</option>
+                                    <option value="not_important" {{ old('priority') == 'not_important' ? 'selected' : '' }}>Not Important</option>
+                                </select>
+                                @error('priority')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Schedule Dates Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-4">Schedule Dates</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="start_schedule" class="block text-sm font-medium text-blue-700 mb-2">Start Schedule</label>
+                                <input type="datetime-local" name="start_schedule" id="start_schedule" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    value="{{ old('start_schedule') }}" @error('start_schedule') is-invalid @enderror>
+                                @error('start_schedule')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+    
+                            <div>
+                                <label for="due_schedule" class="block text-sm font-medium text-blue-700 mb-2">Due Schedule</label>
+                                <input type="datetime-local" name="due_schedule" id="due_schedule" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    value="{{ old('due_schedule') }}" @error('due_schedule') is-invalid @enderror>
+                                @error('due_schedule')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+    
+                            <div>
+                                <label for="before_due_schedule" class="block text-sm font-medium text-blue-700 mb-2">Reminder Before Due</label>
+                                <input type="datetime-local" name="before_due_schedule" id="before_due_schedule" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    value="{{ old('before_due_schedule') }}" @error('before_due_schedule') is-invalid @enderror>
+                                @error('before_due_schedule')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Additional Information Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-4">Additional Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="upload_file" class="block text-sm font-medium text-blue-700 mb-2">Upload File</label>
+                                <input type="file" name="upload_file" id="upload_file" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+    
+                            <div>
+                                <label for="url" class="block text-sm font-medium text-blue-700 mb-2">URL</label>
+                                <input type="url" name="url" id="url" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    value="{{ old('url') }}">
+                            </div>
+    
+                            <div class="md:col-span-2">
+                                <label for="description" class="block text-sm font-medium text-blue-700 mb-2">Description</label>
+                                <textarea name="description" id="description" rows="4"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">{{ old('description') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Collaborators Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-4">Collaborators</h3>
+                        <div id="collaborator-list" class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <select name="collaborators[0][user_id]" 
+                                    class="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Select User</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                <select name="collaborators[0][role]" 
+                                    class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Select Role</option>
+                                    <option value="viewer">Viewer</option>
+                                    <option value="editor">Editor</option>
+                                </select>
+                                <button type="button" onclick="removeCollaborator(this)" 
+                                    class="text-red-600 hover:text-red-800 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                         
-                        <!-- Schedule Name -->
-                        <div>
-                            <x-input-label for="schedule_name" :value="__('Schedule Name')" />
-                            <x-text-input id="schedule_name" name="schedule_name" type="text" class="mt-1 block w-full" :value="old('schedule_name')" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('schedule_name')" />
-                        </div>
-
-                        <!-- Schedule Category -->
-                        <div>
-                            <x-input-label for="schedule_category" :value="__('Schedule Category')" />
-                            <select id="schedule_category" name="schedule_category" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
-                                <option value="">Select Category</option>
-                                <option value="task" {{ old('schedule_category') == 'task' ? 'selected' : '' }}>Task</option>
-                                <option value="activities" {{ old('schedule_category') == 'activities' ? 'selected' : '' }}>Activities</option>
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('schedule_category')" />
-                        </div>
-
-                        <!-- Priority -->
-                        <div>
-                            <x-input-label for="priority" :value="__('Priority')" />
-                            <select id="priority" name="priority" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
-                                <option value="">Select Priority</option>
-                                <option value="important" {{ old('priority') == 'important' ? 'selected' : '' }}>Important</option>
-                                <option value="very important" {{ old('priority') == 'very important' ? 'selected' : '' }}>Very Important</option>
-                                <option value="not important" {{ old('priority') == 'not important' ? 'selected' : '' }}>Not Important</option>
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('priority')" />
-                        </div>
-
-                        <!-- Schedule Dates -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <x-input-label for="start_schedule" :value="__('Start Schedule')" />
-                                <x-text-input id="start_schedule" name="start_schedule" type="datetime-local" class="mt-1 block w-full" :value="old('start_schedule')" required />
-                                <x-input-error class="mt-2" :messages="$errors->get('start_schedule')" />
-                            </div>
-
-                            <div>
-                                <x-input-label for="due_schedule" :value="__('Due Schedule')" />
-                                <x-text-input id="due_schedule" name="due_schedule" type="datetime-local" class="mt-1 block w-full" :value="old('due_schedule')" required />
-                                <x-input-error class="mt-2" :messages="$errors->get('due_schedule')" />
-                            </div>
-
-                            <div>
-                                <x-input-label for="before_due_schedule" :value="__('Reminder Before Start')" />
-                                <x-text-input id="before_due_schedule" name="before_due_schedule" type="datetime-local" class="mt-1 block w-full" :value="old('before_due_schedule')" required />
-                                <x-input-error class="mt-2" :messages="$errors->get('before_due_schedule')" />
-                            </div>
-                        </div>
-
-                        <!-- File Upload -->
-                        <div>
-                            <x-input-label for="upload_file" :value="__('Upload File')" />
-                            <x-text-input id="upload_file" name="upload_file" type="file" class="mt-1 block w-full" />
-                            <x-input-error class="mt-2" :messages="$errors->get('upload_file')" />
-                        </div>
-
-                        <!-- URL -->
-                        <div>
-                            <x-input-label for="url" :value="__('URL (Optional)')" />
-                            <x-text-input id="url" name="url" type="url" class="mt-1 block w-full" :value="old('url')" />
-                            <x-input-error class="mt-2" :messages="$errors->get('url')" />
-                        </div>
-
-                        <!-- Description -->
-                        <div>
-                            <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>{{ old('description') }}</textarea>
-                            <x-input-error class="mt-2" :messages="$errors->get('description')" />
-                        </div>
-
-                        <!-- Collaborators -->
-                        <div>
-                            <x-input-label :value="__('Collaborators')" />
-                            <div id="collaborators-container" class="space-y-4">
-                                <div class="collaborator-entry grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <select name="collaborators[0][user_id]" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                            <option value="">Select User</option>
-                                            @foreach($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <select name="collaborators[0][role]" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                            <option value="editor">Editor</option>
-                                            <option value="viewer">Viewer</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" onclick="addCollaborator()" class="mt-2 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                                Add Collaborator
-                            </button>
-                        </div>
-
-                        <div class="flex items-center justify-end mt-4">
-                            <x-primary-button class="ml-4">
-                                {{ __('Create Schedule') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
-                </div>
+                        <button type="button" onclick="addCollaborator()" 
+                            class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Add Collaborator
+                        </button>
+                    </div>
+    
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit" 
+                            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Create Schedule
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
+    
     <script>
         let collaboratorCount = 1;
         
         function addCollaborator() {
-            const container = document.getElementById('collaborators-container');
-            const newEntry = document.createElement('div');
-            newEntry.className = 'collaborator-entry grid grid-cols-1 md:grid-cols-2 gap-4 mt-4';
-            newEntry.innerHTML = `
-                <div>
-                    <select name="collaborators[${collaboratorCount}][user_id]" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                        <option value="">Select User</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <select name="collaborators[${collaboratorCount}][role]" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                        <option value="editor">Editor</option>
-                        <option value="viewer">Viewer</option>
-                    </select>
-                </div>
+            const container = document.getElementById('collaborator-list');
+            const newCollaborator = document.createElement('div');
+            newCollaborator.className = 'flex items-center space-x-4';
+            
+            newCollaborator.innerHTML = `
+                <select name="collaborators[${collaboratorCount}][user_id]" 
+                    class="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select User</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                <select name="collaborators[${collaboratorCount}][role]" 
+                    class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select Role</option>
+                    <option value="viewer">Viewer</option>
+                    <option value="editor">Editor</option>
+                </select>
+                <button type="button" onclick="removeCollaborator(this)" 
+                    class="text-red-600 hover:text-red-800 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
             `;
-            container.appendChild(newEntry);
+            
+            container.appendChild(newCollaborator);
             collaboratorCount++;
+        }
+        
+        function removeCollaborator(button) {
+            const collaboratorDiv = button.parentElement;
+            if (document.getElementById('collaborator-list').children.length > 1) {
+                collaboratorDiv.remove();
+            }
         }
     </script>
 </x-app-layout>

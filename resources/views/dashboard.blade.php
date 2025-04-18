@@ -36,7 +36,7 @@
                         </div>
                         <div class="flex flex-col justify-center">
                             <p class="text-gray-600 mb-3 text-sm">Create a new schedule to manage your tasks and activities.</p>
-                            <a href="" class="inline-flex items-center px-4 py-2 bg-blue-400 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
+                            <a href="{{ route('user.create-schedule') }}" class="inline-flex items-center px-4 py-2 bg-blue-400 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
                                 Create Schedule
                             </a>
                         </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="flex flex-col justify-center">
                             <p class="text-gray-600 mb-3 text-sm">View and manage all your schedules in one place.</p>
-                            <a href="" class="inline-flex items-center px-4 py-2 bg-teal-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-teal-700">
+                            <a href="{{ route('user.view-schedule') }}" class="inline-flex items-center px-4 py-2 bg-teal-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-teal-700">
                                 View Schedules
                             </a>
                         </div>

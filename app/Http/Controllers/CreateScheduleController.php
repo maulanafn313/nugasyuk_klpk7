@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Schedule;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,58 +13,57 @@ class CreateScheduleController extends Controller
 {
     public function index()
     {
-        $users = User::where('id', '!=', Auth::id())->get();
+        $users = User::all();
         return view('create-schedule', compact('users'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'schedule_name' => 'required|string|max:255',
+        $data = $request->validate([
+            'schedule_name' => 'required|string',
             'schedule_category' => 'required|in:task,activities',
-            'priority' => 'required|in:important,very important,not important',
+            'priority' => 'required|in:very_important,important,not_important',
             'start_schedule' => 'required|date',
-            'due_schedule' => 'required|date|after:start_schedule',
-            'before_start_schedule' => 'required|date|before:start_schedule',
-            'upload_file' => 'nullable|file|max:10240', // 10MB max
+            'due_schedule' => 'required|date|after_or_equal:start_schedule',
+            'before_due_schedule' => 'required|date|before:due_schedule',
+            'upload_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
             'url' => 'nullable|url',
-            'description' => 'required|string',
-            'collaborators' => 'array',
-            'collaborators.*.user_id' => 'required|exists:users,id',
-            'collaborators.*.role' => 'required|in:editor,viewer',
+            'description' => 'nullable|string',
+            'collaborators.*.user_id' => 'nullable|exists:users,id',
+            'collaborators.*.role' => 'nullable|in:viewer,editor',
         ]);
 
-        // Handle file upload
-        if ($request->hasFile('upload_file')) {
-            $path = $request->file('upload_file')->store('schedule_files');
-            $validated['upload_file'] = $path;
+        //simpan data jika file ada
+        if($request->hasFile('upload_file')){
+            $data['upload_file'] = $request->file('upload_file')->store('files');
         }
 
-        // Create schedule
-        $schedule = Schedule::create([
-            'user_id' => Auth::id(),
-            'schedule_name' => $validated['schedule_name'],
-            'schedule_category' => $validated['schedule_category'],
-            'priority' => $validated['priority'],
-            'start_schedule' => $validated['start_schedule'],
-            'due_schedule' => $validated['due_schedule'],
-            'before_start_schedule' => $validated['before_start_schedule'],
-            'upload_file' => $validated['upload_file'] ?? null,
-            'url' => $validated['url'] ?? null,
-            'description' => $validated['description'],
-            'status' => 'to-do',
+        //simpan data ke database
+        $schedule = Auth::user()->schedulesCreated()->create($data);
+
+        //attach pembuat sebagai owner
+        $schedule->collaborators()->attach(Auth::user()->id, [
+            'role' => 'owner',
         ]);
 
-        // Add owner as collaborator
-        $schedule->collaborators()->attach(Auth::id(), ['role' => 'owner']);
+        //Loop elemen collaborator yang dikirim
+    foreach ($request->input('collaborators', []) as $collab) {
+        $userId = $collab['user_id'] ?? null;
+        $role   = $collab['role']    ?? 'viewer';
 
-        // Add other collaborators
-        if (isset($validated['collaborators'])) {
-            foreach ($validated['collaborators'] as $collaborator) {
-                $schedule->collaborators()->attach($collaborator['user_id'], ['role' => $collaborator['role']]);
-            }
+        // hanya attach jika user_id valid & bukan si creator sendiri
+        if ($userId
+            && $userId !== Auth::id()
+            && in_array($role, ['viewer','editor'], true)
+        ) {
+            $schedule->collaborators()->attach($userId, [
+                'role' => $role,
+            ]);
         }
-
-        return redirect()->route('user.view-schedule')->with('success', 'Schedule created successfully!');
     }
+
+        return redirect()->route('user.view-schedule')->with('success', 'Schedule created successfully');
+        
+    }
+
 }
