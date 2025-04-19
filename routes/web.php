@@ -28,7 +28,8 @@ Route::middleware(['auth', 'userMiddleware'])->group(function()
     Route::get('view-schedule', [ScheduleController::class, 'index'])->name('user.view-schedule');
     Route::get('create-schedule', [CreateScheduleController::class, 'index'])->name('user.create-schedule');
     Route::post('store-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
-    // Route::get('history-schedule', [ScheduleController::class, 'index'])->name('user.history-schedule');
+    Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])->name('schedule.update');
+    Route::delete('/schedule/{schedule}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
 });
 
 //route middleware untuk admin
