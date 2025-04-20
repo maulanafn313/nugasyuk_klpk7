@@ -25,9 +25,9 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function () {
     ]);
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -56,7 +56,8 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function()
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
-Route::get('/homepage', function () {
+//route untuk homepage
+Route::get('/', function () {
     $contents = HomepageContent::all();
     return view('homepage', compact('contents'));
 });

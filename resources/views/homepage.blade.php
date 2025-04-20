@@ -29,10 +29,10 @@
 <body class=" font-sans min-h-screen flex flex-col">
 
   <!-- Sticky Header / Navbar -->
-  <header class="bg-white shadow sticky-header">
+  <header class="bg-blue-300 shadow sticky-header">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <a href="/" class="flex items-center space-x-2">
-        <img src="/images/logo-nugasyuk.png" alt="Nugas Yuk Logo" class="h-12 w-auto" />
+        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
       </a>
       <nav class="space-x-6 text-gray-700 font-semibold">
         <a href="{{ route('login') }}" class="px-4 py-2 hover:text-blue-600 transition duration-300">Login</a>
