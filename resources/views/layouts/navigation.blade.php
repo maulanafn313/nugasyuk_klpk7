@@ -103,13 +103,13 @@
 
             {{-- user links --}}
             @if(Auth::user()->role == 'user')
-                <x-responsive-nav-link href="schedule" :active=" request()->routeIs('schedule')">
+                <x-responsive-nav-link href="create-schedule" :active=" request()->routeIs('user.create-schedule')">
                     {{ __('Create Schedule') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link href="view-schedule" :active=" request()->routeIs('user.view-schedule')">
                     {{ __('View Schedule') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="history-schedule" :active=" request()->routeIs('schedule')">
+                <x-responsive-nav-link href="history-schedule" :active=" request()->routeIs('user.history-schedule')">
                     {{ __('History Schedule') }}
                 </x-responsive-nav-link>
             @endif
