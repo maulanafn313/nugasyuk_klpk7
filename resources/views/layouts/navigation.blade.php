@@ -20,9 +20,10 @@
 
                     {{-- admin links --}}
                     @if(Auth::user()->role == 'admin')
-                        <x-nav-link href="admin/userManagement" :active=" request()->routeIs('admin.userManagement')">
-                            {{ __('User Management') }}
-                        </x-nav-link>
+                    <x-nav-link href="{{ route('admin.userManagement.index') }}" :active="request()->routeIs('admin.userManagement.*')">
+    {{ __('User Management') }}
+</x-nav-link>
+
                     @endif
 
                     {{-- user links --}}
@@ -116,11 +117,12 @@
 
             {{-- admin links --}}
             @if(Auth::user()->role == 'admin')
-                <x-responsive-nav-link href="admin/userManagement" :active=" request()->routeIs('admin.userManagement')">
-                    {{ __('UserManagement') }}
-                </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.userManagement.index')" :active="request()->routeIs('admin.userManagement.*')">
+    {{ __('User Management') }}
+</x-responsive-nav-link>
+
             @endif
-        </div>
+            </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

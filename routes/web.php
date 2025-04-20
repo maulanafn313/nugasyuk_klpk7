@@ -6,6 +6,24 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\CreateScheduleController;
+use App\Models\HomepageContent;
+use App\Http\Controllers\Admin\HomepageContentController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+
+Route::middleware(['auth', 'adminMiddleware'])->group(function () {
+    Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // Ini penting! Ganti "users" jadi "userManagement"
+    Route::resource('admin/userManagement', AdminUserController::class)->names([
+        'index' => 'admin.userManagement.index',
+        'create' => 'admin.userManagement.create',
+        'store' => 'admin.userManagement.store',
+        'show' => 'admin.userManagement.show',
+        'edit' => 'admin.userManagement.edit',
+        'update' => 'admin.userManagement.update',
+        'destroy' => 'admin.userManagement.destroy',
+    ]);
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +55,18 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function()
 {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
+
+Route::get('/homepage', function () {
+    $contents = HomepageContent::all();
+    return view('homepage', compact('contents'));
+});
+
+Route::resource('homepage-contents', HomepageContentController::class)
+    ->middleware(['auth', 'adminMiddleware'])
+    ->names('admin.homepage-contents');
+
+
+
 
 
 
