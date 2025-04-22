@@ -12,11 +12,13 @@
                     </a>
                 </div>
 
+
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard')" :active="Auth::user()->role == 'admin' ? request()->routeIs('admin.dashboard') : request()->routeIs('dashboard') ">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
 
                     {{-- admin links --}}
                     @if(Auth::user()->role == 'admin')
@@ -24,30 +26,58 @@
     {{ __('User Management') }}
 </x-nav-link>
 
+
                     @endif
+                    @if(Auth::user()->role == 'admin')
+                    <x-nav-link href="{{ route('admin.cms.index') }}" :active="request()->routeIs('admin.userManagement.*')">
+    {{ __('CMS') }}
+</x-nav-link>
+
+
+                    @endif
+                    @if(Auth::user()->role == 'admin')
+                    <x-nav-link href="{{ route('admin.faqs.index') }}" :active="request()->routeIs('admin.userManagement.*')">
+    {{ __('Faq') }}
+</x-nav-link>
+
+
+                    @endif
+                    @if(Auth::user()->role == 'admin')
+                    <x-nav-link href="{{ route('admin.facilities.index') }}" :active="request()->routeIs('admin.userManagement.*')">
+    {{ __('Facility') }}
+</x-nav-link>
+
+
+                    @endif
+
 
                     {{-- user links --}}
                     @if(Auth::user()->role == 'user')
+
 
                     <x-nav-link href="create-schedule" :active="request()->routeIs('user.create-schedule')">
                         {{ __('Create Schedule') }}
                     </x-nav-link>
 
+
                     <x-nav-link href="view-schedule" :active="request()->routeIs('user.view-schedule')">
                         {{ __('View Schedule') }}
                     </x-nav-link>
 
+
                     <x-nav-link href="calendar" :active="request()->routeIs('user.calendar')">
                         {{ __('Calendar') }}
                     </x-nav-link>
-                    
+                   
                     <x-nav-link href="history-schedule" :active="request()->routeIs('user.history-schedule')">
                         {{ __('History Schedule') }}
                     </x-nav-link>
                     @endif
 
+
                 </div>
             </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -55,6 +85,7 @@
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
+
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -64,14 +95,17 @@
                         </button>
                     </x-slot>
 
+
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
+
 
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
@@ -82,6 +116,7 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
@@ -95,6 +130,7 @@
         </div>
     </div>
 
+
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
@@ -102,18 +138,20 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
+
             {{-- user links --}}
             @if(Auth::user()->role == 'user')
-                <x-responsive-nav-link href="create-schedule" :active=" request()->routeIs('user.create-schedule')">
+                <x-responsive-nav-link href="schedule" :active=" request()->routeIs('schedule')">
                     {{ __('Create Schedule') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link href="view-schedule" :active=" request()->routeIs('user.view-schedule')">
                     {{ __('View Schedule') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="history-schedule" :active=" request()->routeIs('user.history-schedule')">
+                <x-responsive-nav-link href="history-schedule" :active=" request()->routeIs('schedule')">
                     {{ __('History Schedule') }}
                 </x-responsive-nav-link>
             @endif
+
 
             {{-- admin links --}}
             @if(Auth::user()->role == 'admin')
@@ -121,8 +159,10 @@
     {{ __('User Management') }}
 </x-responsive-nav-link>
 
+
             @endif
             </div>
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -131,14 +171,17 @@
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 
+
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
+
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
+
 
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
@@ -150,3 +193,5 @@
         </div>
     </div>
 </nav>
+
+
