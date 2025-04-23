@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
@@ -9,29 +10,45 @@ use App\Http\Controllers\CreateScheduleController;
 use App\Models\HomepageContent;
 use App\Http\Controllers\Admin\HomepageContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\CmsController;
+use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\FaqController;
+use App\Models\Cms;
+use App\Models\Facility;
+use App\Models\Faq;
 
-Route::middleware(['auth', 'adminMiddleware'])->group(function () {
-    Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-    // Ini penting! Ganti "users" jadi "userManagement"
-    Route::resource('admin/userManagement', AdminUserController::class)->names([
-        'index' => 'admin.userManagement.index',
-        'create' => 'admin.userManagement.create',
-        'store' => 'admin.userManagement.store',
-        'show' => 'admin.userManagement.show',
-        'edit' => 'admin.userManagement.edit',
-        'update' => 'admin.userManagement.update',
-        'destroy' => 'admin.userManagement.destroy',
-    ]);
+Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function () {
+    Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+
+    Route::resource('userManagement', AdminUserController::class)->names('admin.userManagement');
+
+
+    Route::resource('homepage-contents', HomepageContentController::class)->names('admin.homepage-contents');
+
+
+    Route::resource('facilities', FacilityController::class)->names('admin.facilities');
+
+
+    Route::resource('faqs', FaqController::class)->names('admin.faqs');
+    Route::resource('cms', CmsController::class)
+        ->names('admin.cms')
+        ->parameters(['cms' => 'cms']);
 });
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,9 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 //route middleware untuk user
-Route::middleware(['auth', 'userMiddleware'])->group(function()
-{
+Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::get('view-schedule', [ScheduleController::class, 'index'])->name('user.view-schedule');
     Route::get('create-schedule', [CreateScheduleController::class, 'index'])->name('user.create-schedule');
@@ -50,17 +67,21 @@ Route::middleware(['auth', 'userMiddleware'])->group(function()
     Route::delete('/schedule/{schedule}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
 });
 
+
 //route middleware untuk admin
-Route::middleware(['auth', 'adminMiddleware'])->group(function()
-{
+Route::middleware(['auth', 'adminMiddleware'])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
-//route untuk homepage
-Route::get('/', function () {
+
+Route::get('/homepage', function () {
     $contents = HomepageContent::all();
-    return view('homepage', compact('contents'));
+    $faqs = Faq::all();
+    $facilities = Facility::all();
+    $cms = Cms::first();
+    return view('homepage', compact('contents', 'faqs', 'facilities','cms'));
 });
+
 
 Route::resource('homepage-contents', HomepageContentController::class)
     ->middleware(['auth', 'adminMiddleware'])
@@ -73,4 +94,14 @@ Route::resource('homepage-contents', HomepageContentController::class)
 
 
 
-require __DIR__.'/auth.php';
+
+
+
+
+
+
+
+
+require __DIR__ . '/auth.php';
+
+
