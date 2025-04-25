@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,16 @@ class ScheduleController extends Controller
 {
     public function index()
     {
-        $schedules = Schedule::with('collaborators')->get();
-        return view('view-schedule', compact('schedules'));
+        $categories = Category::all();
+        $schedules = Schedule::where(function($q) {
+                $q->where('user_id', Auth::id())
+                    ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
+            })
+            ->with('collaborators')
+            ->orderBy('due_schedule')
+            ->get();
+
+        return view('view-schedule', compact('schedules', 'categories'));
     }
 
     public function update(Request $request, Schedule $schedule)
@@ -25,7 +34,7 @@ class ScheduleController extends Controller
 
         $data = $request->validate([
             'schedule_name' => 'required|string',
-            'schedule_category' => 'required|in:task,activities',
+            'category_id' => 'required|exists:categories,id',
             'priority' => 'required|in:very_important,important,not_important',
             'start_schedule' => 'required|date',
             'due_schedule' => 'required|date|after_or_equal:start_schedule',
@@ -64,5 +73,16 @@ class ScheduleController extends Controller
     $schedule->delete();
 
     return redirect()->route('user.view-schedule')->with('success', 'Schedule deleted successfully');
+    }
+
+    // tandai completed (hanya owner)
+    public function complete(Schedule $schedule)
+    {
+        $schedule->update([
+            'status' => 'completed',
+            'completed_at' => now()
+        ]);
+
+        return redirect()->back()->with('success', 'Schedule marked as complete!');
     }
 }

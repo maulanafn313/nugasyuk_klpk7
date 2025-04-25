@@ -1,23 +1,25 @@
 <?php
 
 
+use App\Models\Cms;
+use App\Models\Faq;
+use App\Models\Facility;
+use App\Models\HomepageContent;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CmsController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\CreateScheduleController;
-use App\Models\HomepageContent;
+use App\Http\Controllers\HistoryScheduleController;
+use App\Http\Controllers\CategoryScheduleController;
 use App\Http\Controllers\Admin\HomepageContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\CmsController;
-use App\Http\Controllers\FacilityController;
-use App\Http\Controllers\FaqController;
-use App\Models\Cms;
-use App\Models\Facility;
-use App\Models\Faq;
 
-
+//route untuk admin
 Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
@@ -30,6 +32,8 @@ Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function 
 
     Route::resource('facilities', FacilityController::class)->names('admin.facilities');
 
+    Route::resource('category', CategoryScheduleController::class)->names('admin.category');
+
 
     Route::resource('faqs', FaqController::class)->names('admin.faqs');
     Route::resource('cms', CmsController::class)
@@ -40,16 +44,16 @@ Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function 
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-
+//route untuk profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -65,16 +69,19 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::post('store-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
     Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])->name('schedule.update');
     Route::delete('/schedule/{schedule}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
+    Route::patch('/schedule/{schedule}/complete', [ScheduleController::class,'complete'])->name('schedule.complete');
+    Route::get('/history-schedule', [HistoryScheduleController::class, 'index'])->name('user.history-schedule');
+
 });
 
 
 //route middleware untuk admin
-Route::middleware(['auth', 'adminMiddleware'])->group(function () {
-    Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-});
+// Route::middleware(['auth', 'adminMiddleware'])->group(function () {
+//     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+// });
 
 
-Route::get('/homepage', function () {
+Route::get('/', function () {
     $contents = HomepageContent::all();
     $faqs = Faq::all();
     $facilities = Facility::all();

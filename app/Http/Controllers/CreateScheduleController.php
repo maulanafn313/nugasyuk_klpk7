@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
+
+
 use App\Models\Schedule;
-
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +15,15 @@ class CreateScheduleController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('create-schedule', compact('users'));
+        $categories = Category::all();
+        return view('create-schedule', compact('users', 'categories'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'schedule_name' => 'required|string',
-            'schedule_category' => 'required|in:task,activities',
+            'category_id' => 'required|exists:categories,id',
             'priority' => 'required|in:very_important,important,not_important',
             'start_schedule' => 'required|date',
             'due_schedule' => 'required|date|after_or_equal:start_schedule',
