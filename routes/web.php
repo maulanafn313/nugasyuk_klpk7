@@ -71,6 +71,7 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::delete('/schedule/{schedule}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
     Route::patch('/schedule/{schedule}/complete', [ScheduleController::class,'complete'])->name('schedule.complete');
     Route::get('/history-schedule', [HistoryScheduleController::class, 'index'])->name('user.history-schedule');
+    Route::delete('/history-schedule/{schedule}', [HistoryScheduleController::class, 'destroy'])->name('history.destroy');
 
 });
 
@@ -93,19 +94,6 @@ Route::get('/', function () {
 Route::resource('homepage-contents', HomepageContentController::class)
     ->middleware(['auth', 'adminMiddleware'])
     ->names('admin.homepage-contents');
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -147,6 +147,13 @@
                                 </div>
 
                                 <div>
+                                    <label class="font-semibold text-sm">Start Date</label>
+                                    <div class="mt-1 px-3 py-2 bg-gray-50 rounded-md">
+                                        {{ \Carbon\Carbon::parse($schedule->start_schedule)->format('d M Y, H:i') }}
+                                    </div>
+                                </div>
+
+                                <div>
                                     <label class="font-semibold text-sm">Due Date</label>
                                     <div class="mt-1 px-3 py-2 bg-gray-50 rounded-md">
                                         {{ \Carbon\Carbon::parse($schedule->due_schedule)->format('d M Y, H:i') }}
@@ -154,8 +161,29 @@
                                 </div>
 
                                 <div>
+                                    <label class="font-semibold text-sm">Reminder Before Due</label>
+                                    <div class="mt-1 px-3 py-2 bg-gray-50 rounded-md">
+                                        {{ \Carbon\Carbon::parse($schedule->before_due_schedule)->format('d M Y, H:i') }}
+                                    </div>
+                                </div>
+
+                                <div>
                                     <label class="font-semibold text-sm">Status</label>
-                                    <div class="mt-1 px-3 py-2 @if($schedule->status == 'completed') bg-green-200 text-green-800 @elseif($schedule->status == 'overdue') bg-red-200 text-red-800 @elseif($schedule->isNearDeadline()) bg-orange-200 text-orange-800 @else bg-gray-300 text-gray-800 @endif rounded-md">{{ $schedule->getStatusLabel() }}</div>
+                                    <div class="mt-1 px-3 py-2 
+                                        @if($schedule->status == 'completed') 
+                                            bg-green-200 text-green-800
+                                        @elseif($schedule->status == 'overdue') 
+                                            bg-red-200 text-red-800
+                                        @elseif($schedule->status == 'processed' && $schedule->isNearDeadline()) 
+                                            bg-orange-200 text-orange-800
+                                        @elseif($schedule->status == 'processed') 
+                                            bg-blue-200 text-blue-800
+                                        @else 
+                                            bg-gray-200 text-gray-800 
+                                        @endif 
+                                        rounded-md">
+                                        {{ $schedule->getStatusLabel() }}
+                                    </div>
                                 </div>
 
                                 <div>
@@ -246,7 +274,9 @@
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Start Date</label>
-                                        <input type="datetime-local" name="start_schedule" value="{{ \Carbon\Carbon::parse($schedule->start_schedule)->format('Y-m-d\TH:i') }}"
+                                        <input type="datetime-local" name="start_schedule" 
+                                            value="{{ \Carbon\Carbon::parse($schedule->start_schedule)->format('Y-m-d\TH:i') }}"
+                                            min="{{ date('Y-m-d\TH:i') }}"
                                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                     </div>
 
@@ -380,6 +410,31 @@
         function closeAlert(id) {
             document.getElementById(id)?.remove();
         }
+
+        // New script for date validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to update min datetime for all edit modals
+            function updateMinDateTime() {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                const minDateTime = now.toISOString().slice(0,16);
+
+                // Update all start_schedule inputs in edit modals
+                document.querySelectorAll('input[type="datetime-local"]').forEach(input => {
+                    // Only update min if the schedule hasn't started yet
+                    const currentValue = new Date(input.value);
+                    if (currentValue > now) {
+                        input.min = minDateTime;
+                    }
+                });
+            }
+
+            // Initial update
+            updateMinDateTime();
+
+            // Update every minute
+            setInterval(updateMinDateTime, 60000);
+        });
 
         // Auto-close alert
         @if(session('success'))

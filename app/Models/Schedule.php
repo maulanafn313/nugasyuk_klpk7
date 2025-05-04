@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Schedule extends Model
 {
     /** @use HasFactory<\Database\Factories\ScheduleFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -28,6 +31,10 @@ class Schedule extends Model
 
     protected $casts = [
         'completed_at' => 'datetime',
+        'start_schedule' => 'datetime',
+        'due_schedule' => 'datetime',
+        'before_due_schedule' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     //Pemilik Schedule
@@ -53,13 +60,24 @@ class Schedule extends Model
         )->withPivot('role')->withTimestamps();
     }
 
-    protected static function boot()
+    public static function boot()
     {
-        parent::boot(); 
+        parent::boot();
 
-        // Update status sebelum model disimpan
+        // Sebelum model disimpan
         static::saving(function ($schedule) {
             $schedule->updateStatus();
+        });
+
+        // Setelah model dimuat
+        static::retrieved(function ($schedule) {
+            $oldStatus = $schedule->status;
+            $schedule->updateStatus();
+            
+            // Jika status berubah, simpan langsung ke database
+            if ($oldStatus !== $schedule->status) {
+                $schedule->saveQuietly(); // Menggunakan saveQuietly untuk menghindari infinite loop
+            }
         });
     }
 
@@ -69,25 +87,31 @@ class Schedule extends Model
      * Jangan save() di sini.
      */
 
-        public function updateStatus()
+    public function updateStatus(): void
         {
+            // Jika sudah completed, tidak perlu update
             if ($this->status === 'completed') {
                 return;
             }
-    
-            $now   = Carbon::now();
-            $start = Carbon::parse($this->start_schedule);
-            $rem   = Carbon::parse($this->before_due_schedule);
-            $due   = Carbon::parse($this->due_schedule);
-    
+
+            $now = Carbon::now();
+            $start = $this->start_schedule;
+            $due = $this->due_schedule;
+
+            $oldStatus = $this->status;
+            
+            // Update status berdasarkan waktu
             if ($now->lt($start)) {
                 $this->status = 'to-do';
-            } elseif ($now->between($start, $rem, false)) {
-                $this->status = 'processed';
-            } elseif ($now->between($rem, $due, false)) {
+            } elseif ($now->gte($start) && $now->lte($due)) {
                 $this->status = 'processed';
             } elseif ($now->gt($due)) {
                 $this->status = 'overdue';
+            }
+
+            // Log perubahan status jika ada
+            if ($oldStatus !== $this->status) {
+                Log::info("Schedule ID {$this->id} status changed from {$oldStatus} to {$this->status}");
             }
         }
 
@@ -96,19 +120,16 @@ class Schedule extends Model
     {
         switch ($this->status) {
             case 'to-do':
-                return 'Waiting to Start';
+                return 'Akan Dikerjakan';
             case 'processed':
-                if (Carbon::now()->between(
-                    Carbon::parse($this->before_due_schedule),
-                    Carbon::parse($this->due_schedule)
-                )) {
-                    return 'In Progress (Near Deadline)';
+                if ($this->isNearDeadline()) {
+                    return 'Sedang Dikerjakan (Mendekati Deadline)';
                 }
-                return 'In Progress';
+                return 'Sedang Dikerjakan';
             case 'completed':
-                return 'Completed';
+                return 'Selesai';
             case 'overdue':
-                return 'Overdue';
+                return 'Terlambat';
             default:
                 return ucfirst($this->status);
         }
@@ -117,11 +138,15 @@ class Schedule extends Model
     // Method untuk mengecek apakah schedule mendekati deadline
     public function isNearDeadline()
     {
+        if ($this->status === 'completed') {
+            return false;
+        }
+
         $now = Carbon::now();
         $reminderDate = Carbon::parse($this->before_due_schedule);
         $dueDate = Carbon::parse($this->due_schedule);
         
-        return $now->between($reminderDate, $dueDate);
+        return $now->between($reminderDate, $dueDate) && $this->status === 'processed';
     }
 
     // Method helper untuk mengecek apakah schedule overdue
@@ -153,4 +178,5 @@ class Schedule extends Model
         $this->status = 'completed';
         return $this->save();
     }
+
 }
