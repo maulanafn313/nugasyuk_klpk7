@@ -6,9 +6,13 @@
     </x-slot>
 
 
+
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+
+
 
 
                 <div class="flex justify-end mb-4">
@@ -19,16 +23,24 @@
                 </div>
 
 
+
+
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
                                 <th
                                     class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name </th>
+                                <th
+                                    class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Question</th>
                                 <th
                                     class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Answer</th>
+                                <th
+                                    class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Created</th>
                                 <th
                                     class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions</th>
@@ -38,11 +50,19 @@
                             @foreach ($faqs as $faq)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $faq->user->name }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     {{ $faq->question }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     {{ $faq->answer }}
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $faq->created_at->translatedFormat('d F Y') }}
+                                </td>
+
+
                                 <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
                                     <a href="{{ route('admin.faqs.edit', $faq->id) }}"
                                         class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded text-sm">
@@ -63,6 +83,8 @@
                         </tbody>
                     </table>
                 </div>
+
+
 
 
             </div>

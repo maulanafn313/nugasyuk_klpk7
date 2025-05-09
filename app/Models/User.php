@@ -1,6 +1,8 @@
 <?php
 
+
 namespace App\Models;
+
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,10 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
+
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +29,7 @@ class User extends Authenticatable
         'role',
     ];
 
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -35,6 +40,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -44,7 +50,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password'           => 'hashed',
     ];
-    
+
+
+
 
     // Jadwal yang dimiliki (sebagai creator)
     public function schedulesCreated()
@@ -52,13 +60,19 @@ class User extends Authenticatable
         return $this->hasMany(Schedule::class, 'user_id');
     }
 
+
     // Jadwal kolaborasi (many-to-many via pivot collaborators)
     public function schedules()
     {
-        return $this->belongsToMany(Schedule::class,
+        return $this->belongsToMany(
+            Schedule::class,
             'collaborators',
             'user_id', // Foreign key pada pivot table yang mengacu ke schedule
             'schedule_id', // Foreign key pada pivot table yang mengacu ke user
-    )->withPivot('role')->withTimestamps();
+        )->withPivot('role')->withTimestamps();
+    }
+    public function faqs()
+    {
+        return $this->hasMany(Faq::class);
     }
 }
