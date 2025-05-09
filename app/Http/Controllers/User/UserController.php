@@ -34,7 +34,7 @@ class UserController extends Controller
     // load semua schedule milik user (owner & collaborator)
     $schedules = Schedule::where(function($q) {
         $q->where('user_id', Auth::id())
-          ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
+            ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
     })->get();
 
     // building notifikasi

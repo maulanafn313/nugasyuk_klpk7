@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-       // Buat 5 user
-    User::factory(10)->create();
+    //    // Buat 5 user
+    //     $users = User::factory(10)->create();
 
-    // // Buat 10 schedule dan hubungkan dengan owner + collaborators
-    // Schedule::factory(10)->create()->each(function ($schedule) use ($users) {
+    //     // Buat 10 schedule dan hubungkan dengan owner + collaborators
+    //     Schedule::factory(10)->create()->each(function ($schedule) use ($users) {
     //     // Set owner = user_id di schedule
     //     $owner = $schedule->owner;
 
