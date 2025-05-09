@@ -38,11 +38,11 @@
 </head>
 
 
-<body class=" font-sans min-h-screen flex flex-col bg-gray-50">
+<body class=" font-sans min-h-screen flex flex-col bg-blue-100">
 
 
     <!-- Sticky Header / Navbar -->
-    <header class="bg-white shadow sticky-header">
+    <header class="bg-blue-300 shadow sticky-header">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="flex items-center space-x-2">
                 <img src="{{ asset('storage/cms/' . $cms->logo) }}" alt="Nugas Yuk Logo" class="h-12 w-auto" />
@@ -78,8 +78,6 @@
                 class="max-w-7xl bg-white mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 text-center">
                 @foreach ($facilities as $facility)
                 <div class="p-6 rounded-lg hover:shadow-lg transition duration-300">
-
-
                     <img src="{{ asset('storage/' . $facility->img) }}" alt="{{ $facility->title }}"
                         class="mx-auto mb-6 h-16 w-16 object-contain">
                     <h3 class="text-2xl font-semibold mb-4">{{ $facility->title }}</h3>

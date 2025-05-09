@@ -40,9 +40,9 @@ class CmsController extends Controller
         // dd($request->all());
         $validated = $request->validate([
             'logo' => 'required|image|mimes:jpg,jpeg,png|max:10240',
-            'img_text2' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
-            'img_text3' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
-            'img_text4' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'img_text2' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:10240',
+            'img_text3' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:10240',
+            'img_text4' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:10240',
             'color' => 'required|string',
             'hero_text' => 'required|string',
             'description_text' => 'required|string',

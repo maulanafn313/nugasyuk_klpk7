@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +20,8 @@ class ScheduleFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'category_schedule_id' => Category::factory(),
             'schedule_name' => fake()->sentence(3),
-            'schedule_category' => fake()->randomElement(['task', 'activities']),
             'priority' => fake()->randomElement(['important', 'very_important', 'not_important']),
             'start_schedule' => now()->addDays(rand(1, 5)),
             'due_schedule' => now()->addDays(rand(6, 10)),

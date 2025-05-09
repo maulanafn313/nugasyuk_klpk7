@@ -16,15 +16,34 @@
 
             <!-- Schedule Status Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {{-- <x-card title="To Do" count="5" color="blue" icon="📋" link="{{ route('schedules.index', ['status' => 'todo']) }}" />
-                <x-card title="In Progress" count="3" color="yellow" icon="🔄" link="{{ route('schedules.index', ['status' => 'in-progress']) }}" />
-                <x-card title="Done" count="8" color="green" icon="✅" link="{{ route('schedules.index', ['status' => 'done']) }}" />
-                <x-card title="Late" count="2" color="red" icon="⚠️" link="{{ route('schedules.index', ['status' => 'late']) }}" /> --}}
-
-                    <x-card title="To Do" count="5" color="blue" icon="📋" />
-                    <x-card title="In Progress" count="3" color="yellow" icon="🔄" />
-                    <x-card title="Done" count="8" color="green" icon="✅" />
-                    <x-card title="Late" count="2" color="red" icon="⚠️" />
+                <x-card 
+                    title="To Do" 
+                    :count="$scheduleCounts['to-do']" 
+                    color="blue" 
+                    icon="📋" 
+                    link="{{ route('user.view-schedule', ['status' => 'to-do']) }}"
+                />
+                <x-card 
+                    title="In Progress" 
+                    :count="$scheduleCounts['processed']" 
+                    color="yellow" 
+                    icon="🔄" 
+                    link="{{ route('user.view-schedule', ['status' => 'processed']) }}"
+                />
+                <x-card 
+                    title="Done" 
+                    :count="$scheduleCounts['done']" 
+                    color="green" 
+                    icon="✅" 
+                    link="{{ route('user.view-schedule', ['status' => 'completed']) }}"
+                />
+                <x-card 
+                    title="Late" 
+                    :count="$scheduleCounts['overdue']" 
+                    color="red" 
+                    icon="⚠️" 
+                    link="{{ route('user.view-schedule', ['status' => 'overdue']) }}"
+                />
             </div>
 
             <!-- Action Cards -->
@@ -45,8 +64,7 @@
 
                 <x-card title="View All Schedules" color="teal">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                        <div class="flex justify-center mt-5
-                        .333333">
+                        <div class="flex justify-center mt-5">
                             <x-picture-student-review-task class="w-48 h-48 object-contain rounded-xl shadow-sm" />
                         </div>
                         <div class="flex flex-col justify-center">

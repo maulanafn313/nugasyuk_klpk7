@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('schedule_name');
-            $table->enum('schedule_category',['task', 'activities']);
+            // $table->enum('schedule_category',['task', 'activities']);
             $table->enum('priority',['important', 'very_important', 'not_important']);
             $table->dateTime('start_schedule');
             $table->dateTime('due_schedule');
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->text('description');
             $table->enum('status', ['to-do','processed', 'completed', 'overdue']);
+            $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();
         });
     }

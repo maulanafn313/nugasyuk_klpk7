@@ -21,21 +21,21 @@ class DatabaseSeeder extends Seeder
         // ]);
 
        // Buat 5 user
-    $users = User::factory(5)->create();
+    User::factory(10)->create();
 
-    // Buat 10 schedule dan hubungkan dengan owner + collaborators
-    Schedule::factory(10)->create()->each(function ($schedule) use ($users) {
-        // Set owner = user_id di schedule
-        $owner = $schedule->owner;
+    // // Buat 10 schedule dan hubungkan dengan owner + collaborators
+    // Schedule::factory(10)->create()->each(function ($schedule) use ($users) {
+    //     // Set owner = user_id di schedule
+    //     $owner = $schedule->owner;
 
-        // Tambahkan beberapa user sebagai kolaborator (termasuk owner juga boleh)
-        $collaborators = $users->random(rand(2, 4));
+    //     // Tambahkan beberapa user sebagai kolaborator (termasuk owner juga boleh)
+    //     $collaborators = $users->random(rand(2, 4));
 
-        foreach ($collaborators as $user) {
-            $schedule->collaborators()->attach($user->id, [
-                'role' => $user->id === $owner->id ? 'owner' : fake()->randomElement(['editor', 'viewer']),
-            ]);
-        }
-    });
+    //     foreach ($collaborators as $user) {
+    //         $schedule->collaborators()->attach($user->id, [
+    //             'role' => $user->id === $owner->id ? 'owner' : fake()->randomElement(['editor', 'viewer']),
+    //         ]);
+    //     }
+    // });
     }
 }
