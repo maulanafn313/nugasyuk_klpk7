@@ -85,4 +85,29 @@ class ScheduleController extends Controller
 
         return redirect()->back()->with('success', 'Schedule marked as complete!');
     }
+
+    public function showCalendar()
+    {
+        $schedules = Schedule::all()->map(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'title' => $schedule->schedule_name,
+                'start' => $schedule->start_schedule,
+                'end' => $schedule->due_schedule,
+                'description' => $schedule->description,
+                'color' => $this->getPriorityColor($schedule->priority ?? 'not_important'),
+            ];
+        });
+        return view('calendar', ['events' => $schedules]);
+    }
+
+    private function getPriorityColor($priority)
+    {
+        return match($priority) {
+            'very_important' => '#EF4444', // Merah
+            'important' => '#F59E0B',      // Kuning
+            'not_important' => '#3B82F6',  // Biru
+            default => '#3B82F6'
+        };
+    }
 }

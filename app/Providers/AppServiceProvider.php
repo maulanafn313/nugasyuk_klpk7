@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\User;
+
+use Illuminate\Pagination\Paginator;
 use App\Models\Schedule;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::model('userManagement', User::class);
+        Paginator::useBootstrap();
         View::composer('*', function ($view) {
             if (Auth::check()) {
                 $now = Carbon::now();
