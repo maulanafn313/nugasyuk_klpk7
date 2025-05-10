@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -44,7 +45,7 @@ class FaqController extends Controller
 
 
         Faq::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'question' => $request->question,
             'answer' => $request->answer,
         ]);
@@ -83,7 +84,7 @@ class FaqController extends Controller
 
 
         $faq->update([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'question' => $request->question,
             'answer' => $request->answer,
         ]);

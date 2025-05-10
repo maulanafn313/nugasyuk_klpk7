@@ -20,7 +20,7 @@ class ScheduleFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'category_schedule_id' => Category::factory(),
+            'category_id' => Category::factory(),
             'schedule_name' => fake()->sentence(3),
             'priority' => fake()->randomElement(['important', 'very_important', 'not_important']),
             'start_schedule' => now()->addDays(rand(1, 5)),
