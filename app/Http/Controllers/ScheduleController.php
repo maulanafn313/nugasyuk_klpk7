@@ -65,4 +65,45 @@ class ScheduleController extends Controller
 
     return redirect()->route('user.view-schedule')->with('success', 'Schedule deleted successfully');
     }
+
+    public function getSchedules()
+    {
+        $schedules = Schedule::all()->map(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'title' => $schedule->schedule_name,
+                'start' => $schedule->start_schedule,
+                'end' => $schedule->due_schedule,
+                'description' => $schedule->description,
+                'color' => $this->getPriorityColor($schedule->priority),
+            ];
+        });
+
+        return response()->json($schedules);
+    }
+
+    private function getPriorityColor($priority)
+    {
+        return match($priority) {
+            'very_important' => '#EF4444', // Merah
+            'important' => '#F59E0B',      // Kuning
+            'not_important' => '#3B82F6',  // Biru
+            default => '#3B82F6'           // Default biru
+        };
+    }
+
+    public function showCalendar()
+    {
+        $schedules = Schedule::all()->map(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'title' => $schedule->schedule_name,
+                'start' => $schedule->start_schedule,
+                'end' => $schedule->due_schedule,
+                'description' => $schedule->description,
+                'color' => $this->getPriorityColor($schedule->priority),
+            ];
+        });
+        return view('calendar', ['events' => $schedules]);
+    }
 }

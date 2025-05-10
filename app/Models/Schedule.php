@@ -11,17 +11,16 @@ class Schedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'schedule_name',
-        'schedule_category',
-        'priority',
-        'start_schedule',
-        'due_schedule',
-        'before_due_schedule',
-        'upload_file',
-        'url',
+        'title',
+        'start_date',
+        'end_date',
+        'location',
         'description',
-        'status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     //Pemilik Schedule

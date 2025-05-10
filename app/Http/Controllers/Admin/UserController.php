@@ -11,7 +11,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', '!=', 'admin')->get(); // ngambil user non-admin
+        $users = User::where('role', '!=', 'admin')
+                    ->orderBy('name')
+                    ->paginate(25); // Menampilkan 25 item per halaman
         return view('admin.userManagement.index', compact('users'));
     }
 
@@ -26,16 +28,22 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'province' => 'nullable|string',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => 'user',
             'password' => Hash::make($request->password),
+            'role' => 'user',
+            'address' => $request->address,
+            'city' => $request->city,
+            'province' => $request->province,
         ]);
 
-        return redirect()->route('admin.userManagement.index')->with('success', 'User created successfully.');
+        return redirect()->route('admin.userManagement.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     public function edit(User $user)
@@ -48,20 +56,26 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => "required|email|unique:users,email,$user->id",
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'province' => 'nullable|string',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'address' => $request->address,
+            'city' => $request->city,
+            'province' => $request->province,
         ]);
 
-        return redirect()->route('admin.userManagement.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.userManagement.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.userManagement.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.userManagement.index')->with('success', 'Pengguna berhasil dihapus.');
     }
 }
 

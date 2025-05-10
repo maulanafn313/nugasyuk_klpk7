@@ -35,6 +35,11 @@ Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function 
     Route::resource('cms', CmsController::class)
         ->names('admin.cms')
         ->parameters(['cms' => 'cms']);
+
+    Route::get('/students/status', [App\Http\Controllers\Admin\StudentStatusController::class, 'index'])
+        ->name('admin.students.status');
+    Route::put('/students/{id}/status', [App\Http\Controllers\Admin\StudentStatusController::class, 'updateStatus'])
+        ->name('admin.students.update-status');
 });
 
 
@@ -86,6 +91,10 @@ Route::get('/homepage', function () {
 Route::resource('homepage-contents', HomepageContentController::class)
     ->middleware(['auth', 'adminMiddleware'])
     ->names('admin.homepage-contents');
+
+
+// Route untuk halaman kalender
+Route::get('/calendar', [App\Http\Controllers\ScheduleController::class, 'showCalendar'])->name('calendar');
 
 
 
