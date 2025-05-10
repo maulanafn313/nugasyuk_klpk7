@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,16 @@ class ScheduleController extends Controller
 {
     public function index()
     {
-        $schedules = Schedule::with('collaborators')->get();
-        return view('view-schedule', compact('schedules'));
+        $categories = Category::all();
+        $schedules = Schedule::where(function($q) {
+                $q->where('user_id', Auth::id())
+                    ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
+            })
+            ->with('collaborators')
+            ->orderBy('due_schedule')
+            ->get();
+
+        return view('view-schedule', compact('schedules', 'categories'));
     }
 
     public function update(Request $request, Schedule $schedule)
@@ -25,7 +34,7 @@ class ScheduleController extends Controller
 
         $data = $request->validate([
             'schedule_name' => 'required|string',
-            'schedule_category' => 'required|in:task,activities',
+            'category_id' => 'required|exists:categories,id',
             'priority' => 'required|in:very_important,important,not_important',
             'start_schedule' => 'required|date',
             'due_schedule' => 'required|date|after_or_equal:start_schedule',
@@ -66,30 +75,15 @@ class ScheduleController extends Controller
     return redirect()->route('user.view-schedule')->with('success', 'Schedule deleted successfully');
     }
 
-    public function getSchedules()
+    // tandai completed (hanya owner)
+    public function complete(Schedule $schedule)
     {
-        $schedules = Schedule::all()->map(function ($schedule) {
-            return [
-                'id' => $schedule->id,
-                'title' => $schedule->schedule_name,
-                'start' => $schedule->start_schedule,
-                'end' => $schedule->due_schedule,
-                'description' => $schedule->description,
-                'color' => $this->getPriorityColor($schedule->priority),
-            ];
-        });
+        $schedule->update([
+            'status' => 'completed',
+            'completed_at' => now()
+        ]);
 
-        return response()->json($schedules);
-    }
-
-    private function getPriorityColor($priority)
-    {
-        return match($priority) {
-            'very_important' => '#EF4444', // Merah
-            'important' => '#F59E0B',      // Kuning
-            'not_important' => '#3B82F6',  // Biru
-            default => '#3B82F6'           // Default biru
-        };
+        return redirect()->back()->with('success', 'Schedule marked as complete!');
     }
 
     public function showCalendar()
@@ -101,9 +95,19 @@ class ScheduleController extends Controller
                 'start' => $schedule->start_schedule,
                 'end' => $schedule->due_schedule,
                 'description' => $schedule->description,
-                'color' => $this->getPriorityColor($schedule->priority),
+                'color' => $this->getPriorityColor($schedule->priority ?? 'not_important'),
             ];
         });
         return view('calendar', ['events' => $schedules]);
+    }
+
+    private function getPriorityColor($priority)
+    {
+        return match($priority) {
+            'very_important' => '#EF4444', // Merah
+            'important' => '#F59E0B',      // Kuning
+            'not_important' => '#3B82F6',  // Biru
+            default => '#3B82F6'
+        };
     }
 }

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
+
+
 use App\Models\Schedule;
-
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +15,15 @@ class CreateScheduleController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('create-schedule', compact('users'));
+        $categories = Category::all();
+        return view('create-schedule', compact('users', 'categories'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'schedule_name' => 'required|string',
-            'schedule_category' => 'required|in:task,activities',
+            'category_id' => 'required|exists:categories,id',
             'priority' => 'required|in:very_important,important,not_important',
             'start_schedule' => 'required|date',
             'due_schedule' => 'required|date|after_or_equal:start_schedule',
@@ -41,26 +43,25 @@ class CreateScheduleController extends Controller
         //simpan data ke database
         $schedule = Auth::user()->schedulesCreated()->create($data);
 
-        //attach pembuat sebagai owner
-        $schedule->collaborators()->attach(Auth::user()->id, [
-            'role' => 'owner',
-        ]);
-
-        //Loop elemen collaborator yang dikirim
-    foreach ($request->input('collaborators', []) as $collab) {
-        $userId = $collab['user_id'] ?? null;
-        $role   = $collab['role']    ?? 'viewer';
-
-        // hanya attach jika user_id valid & bukan si creator sendiri
-        if ($userId
-            && $userId !== Auth::id()
-            && in_array($role, ['viewer','editor'], true)
-        ) {
-            $schedule->collaborators()->attach($userId, [
-                'role' => $role,
-            ]);
+        $attachData = [
+            Auth::id() => ['role' => 'owner'],    // si pembuat
+        ];
+        
+        foreach ($request->input('collaborators', []) as $collab) {
+            $userId = $collab['user_id'] ?? null;
+            $role   = $collab['role']    ?? 'viewer';
+        
+            if ($userId
+                && $userId !== Auth::id()
+                && in_array($role, ['viewer','editor'], true)
+            ) {
+                // kalau ada duplikasi di input, key akan ditimpa, jadi aman
+                $attachData[$userId] = ['role' => $role];
+            }
         }
-    }
+        
+        // lalu satu kali kirim ke pivot table tanpa melepas entri lama
+        $schedule->collaborators()->syncWithoutDetaching($attachData);
 
         return redirect()->route('user.view-schedule')->with('success', 'Schedule created successfully');
         

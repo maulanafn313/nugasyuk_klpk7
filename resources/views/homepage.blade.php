@@ -38,11 +38,11 @@
 </head>
 
 
-<body class=" font-sans min-h-screen flex flex-col bg-gray-50">
+<body class=" font-sans min-h-screen flex flex-col bg-blue-100">
 
 
     <!-- Sticky Header / Navbar -->
-    <header class="bg-white shadow sticky-header">
+    <header class="bg-blue-300 shadow sticky-header">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="flex items-center space-x-2">
                 <img src="{{ asset('storage/cms/' . $cms->logo) }}" alt="Nugas Yuk Logo" class="h-12 w-auto" />
@@ -78,8 +78,6 @@
                 class="max-w-7xl bg-white mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 text-center">
                 @foreach ($facilities as $facility)
                 <div class="p-6 rounded-lg hover:shadow-lg transition duration-300">
-
-
                     <img src="{{ asset('storage/' . $facility->img) }}" alt="{{ $facility->title }}"
                         class="mx-auto mb-6 h-16 w-16 object-contain">
                     <h3 class="text-2xl font-semibold mb-4">{{ $facility->title }}</h3>
@@ -215,21 +213,25 @@
 
 
         <!-- NEW: FAQ Section -->
-        <section class="my-10">
-            <div class="max-w-4xl mx-auto px-6">
-                <h2 class="text-3xl font-bold text-center mb-16">Frequently Asked Questions</h2>
+<section class="my-10">
+    <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-16">Frequently Asked Questions</h2>
 
-
-                <div class="space-y-6">
-                    @foreach ($faqs as $faq)
-                    <div class="bg-gray-50 rounded-lg p-6 shadow-md">
-                        <h3 class="text-xl font-semibold mb-3">{{ $faq->question }}</h3>
-                        <p class="text-gray-700">{{ $faq->answer }}</p>
-                    </div>
-                    @endforeach
+        <div class="space-y-6">
+            @foreach ($faqs as $faq)
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                    <h3 class="text-xl font-semibold mb-3">{{ $faq->question }}</h3>
+                    <p class="text-gray-700 mb-2">{{ $faq->answer }}</p>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Ditanyakan oleh: <span class="font-medium">{{ $faq->user->name ?? 'Anonim' }}</span>
+                        pada {{ $faq->created_at->format('d M Y') }}
+                    </p>
                 </div>
-            </div>
-        </section>
+            @endforeach
+        </div>
+    </div>
+</section>
+
 
 
 

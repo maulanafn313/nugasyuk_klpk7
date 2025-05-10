@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="js/schedule-notifications.js"></script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-blue-100">
@@ -31,7 +32,7 @@
             <main>
                 {{ $slot }}
             </main>
-        </div>
+</div>
         @stack('scripts')
     </body>
 </html>
