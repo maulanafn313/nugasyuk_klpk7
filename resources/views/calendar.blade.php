@@ -175,4 +175,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+<x-footer></x-footer>
 @endsection 

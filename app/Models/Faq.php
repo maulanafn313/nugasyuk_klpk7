@@ -20,5 +20,18 @@ class Faq extends Model
     protected $fillable = [
         'question',
         'answer',
+        'answered_by',
+        'answered_at',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function answeredBy()
+    {
+        return $this->belongsTo(User::class, 'answered_by');
+    }
 }

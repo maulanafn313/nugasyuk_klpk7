@@ -13,7 +13,7 @@ class Schedule extends Model
     /** @use HasFactory<\Database\Factories\ScheduleFactory> */
     use HasFactory;
     use SoftDeletes;
-
+    protected $table = 'schedules';
     protected $fillable = [
         'user_id',
         'schedule_name',

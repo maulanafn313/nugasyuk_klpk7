@@ -19,13 +19,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route untuk login
 Route::post('login', [AuthController::class, 'login']);
+// Route untuk register
+Route::post('/register', [AuthController::class, 'register']);
 
-// Route untuk mendapatkan data jadwal
-Route::get('/schedules', [ScheduleController::class, 'getSchedules']);
+// // Route untuk mendapatkan data jadwal
+// Route::get('/schedules', [ScheduleController::class, 'getSchedules']);
 
 // Route yang dilindungi oleh Sanctum
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('user', UserController::class);
+    // Route::apiResource('user', UserController::class);
     Route::apiResource('schedules', ScheduleController::class);
     Route::post('logout', [AuthController::class, 'logout']);
 });

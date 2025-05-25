@@ -17,95 +17,52 @@ use Illuminate\Support\Facades\Auth;
 
 class FaqController extends Controller
 {
-    public function index()
-    {
-        $faqs = Faq::with('user')->get();
-        return view('faqs.index', compact('faqs'));
-    }
-
-
-
-
-
-
+    // Form pertanyaan user
     public function create()
     {
-        return view('faqs.create');
+        return view('faq.form');
     }
 
-
-
-
+    // Simpan pertanyaan user
     public function store(Request $request)
     {
         $request->validate([
             'question' => 'required|string|max:255',
-            'answer' => 'required|string',
         ]);
 
 
         Faq::create([
-            'user_id' => Auth::id(),
             'question' => $request->question,
-            'answer' => $request->answer,
+            'user_id' => Auth::id(),
         ]);
 
 
-        return redirect()->route('admin.faqs.index')->with('success', 'FAQ berhasil ditambahkan.');
+        return redirect()->route('faq.form')->with('success', 'Pertanyaan Anda telah dikirim!');
     }
 
 
-
-
-
-
-    public function show(Faq $faq)
+    //halaman admin untuk menjawab pertanyaan
+    public function index()
     {
-        return view('faqs.show', compact('faq'));
+        $faqs = Faq::whereNull('answer')->get(); // Ambil pertanyaan yang belum dijawab
+        return view('admin.faqs', compact('faqs'));
     }
 
 
-
-
-    public function edit(Faq $faq)
-    {
-        return view('faqs.edit', compact('faq'));
-    }
-
-
-
-
-    public function update(Request $request, Faq $faq)
+    // Proses menjawab pertanyaan
+    public function answer(Request $request, Faq $faq)
     {
         $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
+            'answer' => 'required|string|max:255',
         ]);
 
 
         $faq->update([
-            'user_id' => Auth::id(),
-            'question' => $request->question,
             'answer' => $request->answer,
         ]);
 
 
-        return redirect()->route('admin.faqs.index')->with('success', 'FAQ berhasil diupdate.');
-    }
-
-
-
-
-
-
-    public function destroy(Faq $faq)
-    {
-        $faq->delete();
-
-
-
-
-        return redirect()->route('admin.faqs.index')->with('success', 'FAQ berhasil dihapus.');
+        return redirect()->route('admin.faqs')->with('success', 'Pertanyaan telah dijawab!');
     }
 }
 

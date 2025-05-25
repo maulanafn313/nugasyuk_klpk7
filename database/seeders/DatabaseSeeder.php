@@ -40,9 +40,9 @@ class DatabaseSeeder extends Seeder
         });
 
         // Seed data lainnya
-        Faq::factory(10)->create();
-        Facility::factory(5)->create();
-        Cms::factory(1)->create();
-        Category::factory(5)->create();
+        Faq::factory(3)->create();
+        Facility::factory(3)->create();
+        Cms::factory()->create();
+        Category::factory()->create();
     }
 }

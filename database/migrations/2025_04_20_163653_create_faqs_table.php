@@ -19,8 +19,13 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable(); // User yang mengajukan pertanyaan
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('question');
-            $table->string('answer');
+            $table->string('answer')->nullable(); // Jawaban admin
+            $table->unsignedBigInteger('answered_by')->nullable(); // Admin yang menjawab
+            $table->foreign('answered_by')->references('id')->on('users')->onDelete('set null');
+            $table->timestamp('answered_at')->nullable(); // Waktu jawaban diberikan
             $table->timestamps();
         });
     }

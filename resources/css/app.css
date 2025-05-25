@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
+@import '@fullcalendar/timegrid/main.css';
+
+
+    /* Sesuaikan warna tombol di FullCalendar */
+    .fc-button {
+        background-color: #007bff; /* Warna biru */
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .fc-button:hover {
+        background-color: #0056b3; /* Warna biru gelap */
+    }
+
+    /* Sesuaikan warna teks di kalender */
+    .fc-toolbar-title {
+        color: #333; /* Warna teks judul kalender */
+        font-weight: bold;
+    }
+
+    /* Sesuaikan warna grid kalender */
+    .fc-daygrid-day {
+        background-color: #ffffff; /* Warna putih untuk grid */
+        border: 1px solid #e6e6e6; /* Border abu-abu */
+    }
+
+    /* Warna untuk hari ini */
+    .fc-day-today {
+        background-color: #eaf4ff; /* Warna biru muda */
+    }
+
+    /* Warna untuk event */
+    .fc-event {
+        background-color: #007bff; /* Warna biru */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 2px 5px;
+    }

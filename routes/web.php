@@ -17,33 +17,26 @@ use App\Http\Controllers\CreateScheduleController;
 use App\Http\Controllers\HistoryScheduleController;
 use App\Http\Controllers\CategoryScheduleController;
 use App\Http\Controllers\Admin\HomepageContentController;
+use App\Http\Controllers\Google\GoogleCalendarController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 //route untuk admin
 Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
-
     Route::resource('userManagement', AdminUserController::class)->names('admin.userManagement');
-
-
     Route::resource('homepage-contents', HomepageContentController::class)->names('admin.homepage-contents');
-
-
     Route::resource('facilities', FacilityController::class)->names('admin.facilities');
-
     Route::resource('category', CategoryScheduleController::class)->names('admin.category');
-
-
     Route::resource('faqs', FaqController::class)->names('admin.faqs');
     Route::resource('cms', CmsController::class)
         ->names('admin.cms')
         ->parameters(['cms' => 'cms']);
-
     Route::get('/students/status', [App\Http\Controllers\Admin\StudentStatusController::class, 'index'])
         ->name('admin.students.status');
     Route::put('/students/{id}/status', [App\Http\Controllers\Admin\StudentStatusController::class, 'updateStatus'])
         ->name('admin.students.update-status');
+    Route::get('/admin/faqs', [FaqController::class, 'index'])->name('admin.faqs'); // Halaman admin untuk menjawab pertanyaan
+    Route::post('/admin/faqs/{faq}', [FaqController::class, 'answer'])->name('admin.faqs.answer'); // Proses menjawab pertanyaan
 });
 
 
@@ -77,7 +70,13 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::patch('/schedule/{schedule}/complete', [ScheduleController::class,'complete'])->name('schedule.complete');
     Route::get('/history-schedule', [HistoryScheduleController::class, 'index'])->name('user.history-schedule');
     Route::delete('/history-schedule/{schedule}', [HistoryScheduleController::class, 'destroy'])->name('history.destroy');
+    Route::get('/faq-form', [FaqController::class, 'create'])->name('faq.form'); // Form pertanyaan user
+    Route::post('/faq-form', [FaqController::class, 'store'])->name('faq.store'); // Simpan pertanyaan user
 
+    // Rute Google Calendar
+    Route::get('/google/authorize', [GoogleCalendarController::class, 'authorize'])->name('google.authorize');
+    Route::get('/google/callback', [GoogleCalendarController::class, 'callback'])->name('google.callback');
+    Route::get('/google/calendar/events', [GoogleCalendarController::class, 'listEvents'])->name('google.calendar.events');
 });
 
 

@@ -34,6 +34,8 @@ class ScheduleController extends Controller
             'upload_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
             'url' => 'nullable|url',
             'description' => 'nullable|string',
+            'collaborators' => 'nullable|array', // Tambahkan validasi untuk kolaborator
+            'collaborators.*' => 'exists:users,id', // Pastikan setiap kolaborator adalah user yang valid
         ]);
 
         if($request->hasFile('uploaad_file'))
@@ -42,6 +44,11 @@ class ScheduleController extends Controller
         }
 
         $schedule = Auth::user()->schedulesCreated()->create($data);
+
+        // Tambahkan kolaborator ke jadwal
+        if (!empty($data['collaborators'])) {
+            $schedule->collaborators()->attach($data['collaborators'], ['role' => 'viewer']);
+        }
 
         return new ScheduleResource($schedule);
     }
@@ -96,7 +103,16 @@ class ScheduleController extends Controller
 
     private function authorizeAccess(Schedule $schedule)
     {
-        $userRole = $schedule->collaborators()->where('user_id', Auth::id())->first()?->pivot->role;
+        // Periksa apakah user adalah pemilik jadwal
+        if ($schedule->user_id === Auth::id()) {
+            return true;
+        }
+
+        // Periksa apakah user adalah kolaborator dengan peran yang diizinkan
+        $userRole = $schedule->collaborators()
+            ->where('user_id', Auth::id())
+            ->first()?->pivot->role;
+
         if (!in_array($userRole, ['owner', 'editor'])) {
             abort(403, 'Unauthorized action.');
         }

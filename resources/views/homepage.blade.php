@@ -213,24 +213,24 @@
 
 
         <!-- NEW: FAQ Section -->
-<section class="my-10">
-    <div class="max-w-4xl mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center mb-16">Frequently Asked Questions</h2>
+    <section class="my-10">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-16">Frequently Asked Questions</h2>
 
-        <div class="space-y-6">
-            @foreach ($faqs as $faq)
-                <div class="bg-gray-50 rounded-lg p-6 shadow-md">
-                    <h3 class="text-xl font-semibold mb-3">{{ $faq->question }}</h3>
-                    <p class="text-gray-700 mb-2">{{ $faq->answer }}</p>
-                    <p class="text-sm text-gray-500 mt-4">
-                        Ditanyakan oleh: <span class="font-medium">{{ $faq->user->name ?? 'Anonim' }}</span>
-                        pada {{ $faq->created_at->format('d M Y') }}
-                    </p>
-                </div>
-            @endforeach
+            <div class="space-y-6">
+                @foreach ($faqs as $faq)
+                    <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                        <h3 class="text-xl font-semibold mb-3">{{ $faq->question }}</h3>
+                        <p class="text-gray-700 mb-2">{{ $faq->answer }}</p>
+                        <p class="text-sm text-gray-500 mt-4">
+                            Ditanyakan oleh: <span class="font-medium">{{ $faq->user->name ?? 'Anonim' }}</span>
+                            pada {{ $faq->created_at->format('d M Y') }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 
