@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
         // Buat admin user
         $this->call(AdminSeeder::class);
 
+        $this->call([
+            CategorySeeder::class,
+        ]);
+
         // Buat 10 user
         $users = User::factory(10)->create();
 
@@ -43,6 +47,6 @@ class DatabaseSeeder extends Seeder
         Faq::factory(3)->create();
         Facility::factory(3)->create();
         Cms::factory()->create();
-        Category::factory()->create();
+        // Category::factory()->create();
     }
 }

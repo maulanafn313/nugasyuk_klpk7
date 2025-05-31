@@ -46,7 +46,7 @@ class Schedule extends Model
     //Category Schedule
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     //Collaborator (many-to-many)

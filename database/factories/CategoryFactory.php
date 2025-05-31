@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'schedule_category' => fake()->randomElement(['Task', 'Activities', 'Project']), // Generate random category name
+            'schedule_category' => fake()->word(), // Generate random category name
         ];
     }
 }

@@ -38,7 +38,7 @@ class ScheduleController extends Controller
             'collaborators.*' => 'exists:users,id', // Pastikan setiap kolaborator adalah user yang valid
         ]);
 
-        if($request->hasFile('uploaad_file'))
+        if($request->hasFile('upload_file'))
         {
             $data['upload_file'] = $request->file('upload_file')->store('files');
         }
@@ -65,15 +65,16 @@ class ScheduleController extends Controller
         $this->authorizeAccess($schedule);
 
         $data = $request->validate([
-            'schedule_name' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'priority' => 'required|in:very_important,important,not_important',
-            'start_schedule' => 'required|date',
-            'due_schedule' => 'required|date|after_or_equal:start_schedule',
-            'before_due_schedule' => 'required|date|before:due_schedule',
+            'schedule_name' => 'sometimes|required|string',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'priority' => 'sometimes|required|in:very_important,important,not_important',
+            'start_schedule' => 'sometimes|required|date',
+            'due_schedule' => 'sometimes|required|date|after_or_equal:start_schedule',
+            'before_due_schedule' => 'sometimes|required|date|before:due_schedule',
             'upload_file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
             'url' => 'nullable|url',
             'description' => 'nullable|string',
+            'status' => 'sometimes|string|in:to-do,processed,completed,overdue',
         ]);
 
         if ($request->hasFile('upload_file')) {
@@ -85,7 +86,7 @@ class ScheduleController extends Controller
 
         $schedule->update($data);
 
-        return new ScheduleResource($schedule);
+        return new ScheduleResource($schedule->fresh());
     }
 
     public function destroy(Schedule $schedule)
