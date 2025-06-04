@@ -77,6 +77,9 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::get('/google/authorize', [GoogleCalendarController::class, 'authorize'])->name('google.authorize');
     Route::get('/google/callback', [GoogleCalendarController::class, 'callback'])->name('google.callback');
     Route::get('/google/calendar/events', [GoogleCalendarController::class, 'listEvents'])->name('google.calendar.events');
+    Route::post('/google/events', [GoogleCalendarController::class, 'createEvent'])->name('google.events.create');
+    Route::put('/google/events/{eventId}', [GoogleCalendarController::class, 'updateEvent'])->name('google.events.update');
+    Route::delete('/google/events/{eventId}', [GoogleCalendarController::class, 'deleteEvent'])->name('google.events.delete');
 });
 
 
