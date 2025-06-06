@@ -3,7 +3,9 @@
 
 use App\Models\Cms;
 use App\Models\Faq;
+use App\Models\User;
 use App\Models\Facility;
+use Illuminate\Http\Request;
 use App\Models\HomepageContent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CmsController;
@@ -67,11 +69,23 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
     Route::post('store-schedule', [CreateScheduleController::class, 'store'])->name('user.store-schedule');
     Route::put('/schedule/{schedule}', [ScheduleController::class, 'update'])->name('schedule.update');
     Route::delete('/schedule/{schedule}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
-    Route::patch('/schedule/{schedule}/complete', [ScheduleController::class,'complete'])->name('schedule.complete');
+    Route::patch('/schedule/{schedule}/complete', [ScheduleController::class, 'complete'])->name('schedule.complete');
     Route::get('/history-schedule', [HistoryScheduleController::class, 'index'])->name('user.history-schedule');
     Route::delete('/history-schedule/{schedule}', [HistoryScheduleController::class, 'destroy'])->name('history.destroy');
     Route::get('/faq-form', [FaqController::class, 'create'])->name('faq.form'); // Form pertanyaan user
     Route::post('/faq-form', [FaqController::class, 'store'])->name('faq.store'); // Simpan pertanyaan user
+
+    Route::get('/user/search-email', function (Request $request) {
+        $q = $request->get('q');
+        $users = User::where('role', 'user') // hanya user dengan role 'user'
+            ->where(function ($query) use ($q) {
+                $query->where('email', 'like', "%$q%")
+                    ->orWhere('name', 'like', "%$q%");
+            })
+            ->limit(5)
+            ->get(['id', 'name', 'email']);
+        return response()->json($users);
+    });
 
     // Rute Google Calendar
     Route::get('/google/authorize', [GoogleCalendarController::class, 'authorize'])->name('google.authorize');
@@ -94,7 +108,7 @@ Route::get('/', function () {
     $faqs = Faq::all();
     $facilities = Facility::all();
     $cms = Cms::first();
-    return view('homepage', compact('contents', 'faqs', 'facilities','cms'));
+    return view('homepage', compact('contents', 'faqs', 'facilities', 'cms'));
 });
 
 
@@ -109,5 +123,3 @@ Route::get('/calendar', [App\Http\Controllers\ScheduleController::class, 'showCa
 
 
 require __DIR__ . '/auth.php';
-
-

@@ -146,25 +146,20 @@
                                 />
                             </svg>
                         </div>
-
-                        {{-- <input
-                            type="password"
-                            name=""
-                            id=""
-                            placeholder="Enter your password"
-                            class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                        /> --}}
-
-                        <x-text-input id="password" class="block mt-1 w-full"
+                        <x-text-input id="password" class="block mt-1 w-full pr-10"
                             type="password"
                             name="password"
                             :value="old('password')"
                             placeholder="Enter your password"
                             required autocomplete="current-password" />
-
-                        
+                        <!-- Eye icon -->
+                        <button type="button" onclick="togglePassword('password', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z" />
+                            </svg>
+                        </button>
                     </div>
-
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
@@ -184,25 +179,20 @@
                                 />
                             </svg>
                         </div>
-
-                        {{-- <input
-                            type="password"
-                            name=""
-                            id=""
-                            placeholder="Enter your password"
-                            class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                        /> --}}
-
-                        <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                        <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10"
                             type="password"
                             name="password_confirmation"
-                            :value="old('password')"
+                            :value="old('password_confirmation')"
                             placeholder="Enter your password confirmation"
                             required autocomplete="new-password" />
-
-                        
+                        <!-- Eye icon -->
+                        <button type="button" onclick="togglePassword('password_confirmation', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z" />
+                            </svg>
+                        </button>
                     </div>
-
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
@@ -215,4 +205,19 @@
             </div>
         </form>
     </div>
+    <script>
+    function togglePassword(id, btn) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+            btn.querySelector('svg').innerHTML =
+                `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7c1.657 0 3.216.418 4.563 1.138M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.363 4.363L4.222 4.222"/>`;
+        } else {
+            input.type = "password";
+            btn.querySelector('svg').innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z"/>`;
+        }
+    }
+</script>
 </x-guest-layout>

@@ -92,7 +92,6 @@
                 <div>
                     <div class="flex items-center justify-between">
                         <x-input-label for="password" :value="__('Password')" />
-
                         <a href="{{ route('password.request') }}" title="" class="text-sm font-medium text-blue-800 transition-all duration-200 hover:text-white focus:text-white hover:underline"> Forgot password? </a>
                     </div>
                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
@@ -115,14 +114,20 @@
                             class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                         /> --}}
 
-                        <x-text-input id="password" class="block mt-1 w-full"
+                        <x-text-input id="password" class="block mt-1 w-full pr-10"
                             type="password"
                             name="password"
                             :value="old('password')"
                             placeholder="Enter your password"
                             required autocomplete="current-password" />
 
-                        
+                        <!-- Eye icon -->
+                        <button type="button" onclick="togglePassword('password', this)" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z" />
+                            </svg>
+                        </button>
                     </div>
 
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -145,4 +150,24 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function togglePassword(id, element) {
+            const passwordInput = document.getElementById(id);
+            const passwordType = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', passwordType);
+
+            // Toggle the eye icon
+            const eyeIcon = element.querySelector('svg');
+            if (eyeIcon) {
+                const eyeIconPath = eyeIcon.querySelector('path');
+                if (eyeIconPath) {
+                    const newPath = eyeIconPath.getAttribute('d') === 'M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z'
+                        ? 'M13.875 18.825a9.004 9.004 0 01-3.75-.825m-3.375-2.325A9.004 9.004 0 0112 15a9.004 9.004 0 013.75.675m3.375 2.325A9.004 9.004 0 0112 18.825'
+                        : 'M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9 0a9 9 0 0118 0 9 9 0 01-18 0z';
+                    eyeIconPath.setAttribute('d', newPath);
+                }
+            }
+        }
+    </script>
 </x-guest-layout>

@@ -47,9 +47,9 @@ class ScheduleController extends Controller
         if($request->hasFile('upload_file')){
             // Delete old file if exists
             if($schedule->upload_file) {
-                Storage::delete($schedule->upload_file);
+                Storage::disk('public')->delete($schedule->upload_file);
             }
-            $data['upload_file'] = $request->file('upload_file')->store('files');
+            $data['upload_file'] = $request->file('upload_file')->store('files', 'public');
         }
 
         $schedule->update($data);
@@ -67,7 +67,7 @@ class ScheduleController extends Controller
         
         // Delete file if exists
     if($schedule->upload_file) {
-        Storage::delete($schedule->upload_file);
+        Storage::disk('public')->delete($schedule->upload_file);
     }
 
     $schedule->delete();

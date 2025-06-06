@@ -37,7 +37,7 @@ class CreateScheduleController extends Controller
 
         //simpan data jika file ada
         if($request->hasFile('upload_file')){
-            $data['upload_file'] = $request->file('upload_file')->store('files');
+            $data['upload_file'] = $request->file('upload_file')->store('files', 'public');
         }
 
         //simpan data ke database

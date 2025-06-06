@@ -211,7 +211,7 @@
                                     <div>
                                         <label class="font-semibold text-sm">Attached File</label>
                                         <div class="mt-1 px-3 py-2 bg-gray-50 rounded-md">
-                                            <a href="{{ Storage::url($schedule->upload_file) }}" target="_blank" class="text-blue-600 hover:underline">
+                                            <a href="{{ asset('storage/' . $schedule->upload_file) }}" target="_blank" class="text-blue-600 hover:underline">
                                                 Download File
                                             </a>
                                         </div>

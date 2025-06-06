@@ -124,31 +124,25 @@
                     <div class="mb-8">
                         <h3 class="text-lg font-semibold text-blue-700 mb-4">Collaborators</h3>
                         <div id="collaborator-list" class="space-y-4">
-                            <div class="flex items-center space-x-4">
-                                <select name="collaborators[0][user_id]" 
-                                    class="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="">Select User</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                                <select name="collaborators[0][role]" 
-                                    class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <div class="flex items-center space-x-4 collaborator-row">
+                                <div class="w-1/2 relative">
+                                    <input type="text" placeholder="Type email..." class="collab-email-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
+                                    <input type="hidden" name="collaborators[0][user_id]" class="collab-user-id">
+                                    <div class="collab-suggestions absolute z-10 bg-white border border-gray-300 w-full rounded shadow mt-1 hidden"></div>
+                                </div>
+                                <select name="collaborators[0][role]" class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Select Role</option>
                                     <option value="viewer">Viewer</option>
                                     <option value="editor">Editor</option>
                                 </select>
-                                <button type="button" onclick="removeCollaborator(this)" 
-                                    class="text-red-600 hover:text-red-800 focus:outline-none">
+                                <button type="button" onclick="removeCollaborator(this)" class="text-red-600 hover:text-red-800 focus:outline-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        
-                        <button type="button" onclick="addCollaborator()" 
-                            class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="button" onclick="addCollaborator()" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Add Collaborator
                         </button>
                     </div>
@@ -167,58 +161,80 @@
     
     <script>
         let collaboratorCount = 1;
-        
+
         function addCollaborator() {
             const container = document.getElementById('collaborator-list');
+            const idx = collaboratorCount++;
             const newCollaborator = document.createElement('div');
-            newCollaborator.className = 'flex items-center space-x-4';
-            
+            newCollaborator.className = 'flex items-center space-x-4 collaborator-row';
             newCollaborator.innerHTML = `
-                <select name="collaborators[${collaboratorCount}][user_id]" 
-                    class="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">Select User</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-                <select name="collaborators[${collaboratorCount}][role]" 
-                    class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <div class="w-1/2 relative">
+                    <input type="text" placeholder="Type email..." class="collab-email-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
+                    <input type="hidden" name="collaborators[${idx}][user_id]" class="collab-user-id">
+                    <div class="collab-suggestions absolute z-10 bg-white border border-gray-300 w-full rounded shadow mt-1 hidden"></div>
+                </div>
+                <select name="collaborators[${idx}][role]" class="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select Role</option>
                     <option value="viewer">Viewer</option>
                     <option value="editor">Editor</option>
                 </select>
-                <button type="button" onclick="removeCollaborator(this)" 
-                    class="text-red-600 hover:text-red-800 focus:outline-none">
+                <button type="button" onclick="removeCollaborator(this)" class="text-red-600 hover:text-red-800 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
             `;
-            
             container.appendChild(newCollaborator);
-            collaboratorCount++;
+            setupAutocomplete(newCollaborator.querySelector('.collab-email-input'));
         }
-        
+
         function removeCollaborator(button) {
-            const collaboratorDiv = button.parentElement;
+            const collaboratorDiv = button.closest('.collaborator-row');
             if (document.getElementById('collaborator-list').children.length > 1) {
                 collaboratorDiv.remove();
             }
         }
 
-        // Set minimum date for start schedule
+        // --- Autocomplete logic ---
+        function setupAutocomplete(input) {
+            const suggestions = input.parentElement.querySelector('.collab-suggestions');
+            const hiddenInput = input.parentElement.querySelector('.collab-user-id');
+            input.addEventListener('input', function() {
+                const q = input.value.trim();
+                hiddenInput.value = '';
+                if (q.length < 2) {
+                    suggestions.innerHTML = '';
+                    suggestions.classList.add('hidden');
+                    return;
+                }
+                fetch(`/user/search-email?q=${encodeURIComponent(q)}`)
+                    .then(res => res.json())
+                    .then(users => {
+                        if (users.length === 0) {
+                            suggestions.innerHTML = `<div class="px-3 py-2 text-gray-500">User not found</div>`;
+                        } else {
+                            suggestions.innerHTML = users.map(u =>
+                                `<div class="px-3 py-2 hover:bg-indigo-100 cursor-pointer" data-id="${u.id}" data-email="${u.email}">${u.name} &lt;${u.email}&gt;</div>`
+                            ).join('');
+                        }
+                        suggestions.classList.remove('hidden');
+                    });
+            });
+            input.addEventListener('blur', function() {
+                setTimeout(() => suggestions.classList.add('hidden'), 200);
+            });
+            suggestions.addEventListener('mousedown', function(e) {
+                if (e.target.dataset.id) {
+                    input.value = e.target.dataset.email;
+                    hiddenInput.value = e.target.dataset.id;
+                    suggestions.classList.add('hidden');
+                }
+            });
+        }
+
+        // Setup autocomplete for initial input
         document.addEventListener('DOMContentLoaded', function() {
-            const startScheduleInput = document.getElementById('start_schedule');
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            startScheduleInput.min = now.toISOString().slice(0,16);
-            
-            // Update min attribute every minute to keep it current
-            setInterval(() => {
-                const now = new Date();
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                startScheduleInput.min = now.toISOString().slice(0,16);
-            }, 60000);
+            document.querySelectorAll('.collab-email-input').forEach(setupAutocomplete);
         });
     </script>
 </x-app-layout>
