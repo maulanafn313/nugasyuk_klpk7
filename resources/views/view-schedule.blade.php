@@ -33,6 +33,7 @@
                             <h3 class="text-lg font-semibold text-gray-900">No Schedules Found</h3>
                             <p class="mt-2 text-gray-600">You have no schedules at the moment.</p>
                         </div>
+                    </div>
                 @else
                     @foreach($schedules as $schedule)
                         <div class="overflow-hidden rounded-lg shadow-lg border
