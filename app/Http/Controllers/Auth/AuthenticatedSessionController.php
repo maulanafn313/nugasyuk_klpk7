@@ -31,10 +31,10 @@ class AuthenticatedSessionController extends Controller
         //pengalihan khusus untuk admin
         if(Auth::user()->role == 'admin')
         {
-            return redirect(route('admin.dashboard'));
+            return redirect(route('admin.dashboard'))->with('success', 'login-successful!');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('dashboard', absolute: false))->with('success', 'login-successful!');
     }
 
     /**
