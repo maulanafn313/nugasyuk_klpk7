@@ -59,13 +59,13 @@
                         </x-nav-link>
 
 
-                        {{-- <x-nav-link href="calendar" :active="request()->routeIs('user.calendar')">
+                        <x-nav-link href="calendar" :active="request()->routeIs('user.calendar')">
                             {{ __('Calendar') }}
-                        </x-nav-link> --}}
-
-                        <x-nav-link href="/google/calendar/events" :active="request()->routeIs('google.calendar.events')">
-                            {{ __('Google Calendar') }}
                         </x-nav-link>
+
+                        {{-- <x-nav-link href="/google/calendar/events" :active="request()->routeIs('google.calendar.events')">
+                            {{ __('Google Calendar') }}
+                        </x-nav-link> --}}
             
                         <x-nav-link href="history-schedule" :active="request()->routeIs('user.history-schedule')">
                             {{ __('History Schedule') }}

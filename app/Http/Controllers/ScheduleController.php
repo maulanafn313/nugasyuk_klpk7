@@ -13,10 +13,10 @@ class ScheduleController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $schedules = Schedule::where(function($q) {
-                $q->where('user_id', Auth::id())
-                    ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
-            })
+        $schedules = Schedule::where(function ($q) {
+            $q->where('user_id', Auth::id())
+                ->orWhereHas('collaborators', fn($q) => $q->where('user_id', Auth::id()));
+        })
             ->with('collaborators')
             ->orderBy('due_schedule')
             ->get();
@@ -44,16 +44,16 @@ class ScheduleController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        if($request->hasFile('upload_file')){
+        if ($request->hasFile('upload_file')) {
             // Delete old file if exists
-            if($schedule->upload_file) {
+            if ($schedule->upload_file) {
                 Storage::disk('public')->delete($schedule->upload_file);
             }
             $data['upload_file'] = $request->file('upload_file')->store('files', 'public');
         }
 
         $schedule->update($data);
-        
+
         return redirect()->route('user.view-schedule')->with('success', 'Schedule updated successfully');
     }
 
@@ -64,15 +64,15 @@ class ScheduleController extends Controller
         if (!in_array($userRole, ['owner', 'editor'])) {
             abort(403);
         }
-        
+
         // Delete file if exists
-    if($schedule->upload_file) {
-        Storage::disk('public')->delete($schedule->upload_file);
-    }
+        if ($schedule->upload_file) {
+            Storage::disk('public')->delete($schedule->upload_file);
+        }
 
-    $schedule->delete();
+        $schedule->delete();
 
-    return redirect()->route('user.view-schedule')->with('success', 'Schedule deleted successfully');
+        return redirect()->route('user.view-schedule')->with('success', 'Schedule deleted successfully');
     }
 
     // tandai completed (hanya owner)
@@ -88,7 +88,18 @@ class ScheduleController extends Controller
 
     public function showCalendar()
     {
-        $schedules = Schedule::all()->map(function ($schedule) {
+        $user = Auth::user();
+
+        // Jadwal milik sendiri
+        $owned = Schedule::where('user_id', $user->id);
+
+        // Jadwal kolaborasi (bukan owner, user sebagai kolaborator)
+        $collab = Schedule::whereHas('collaborators', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->where('user_id', '!=', $user->id);
+
+        // Gabungkan dan mapping ke format FullCalendar
+        $schedules = $owned->union($collab)->get()->map(function ($schedule) {
             return [
                 'id' => $schedule->id,
                 'title' => $schedule->schedule_name,
@@ -98,12 +109,13 @@ class ScheduleController extends Controller
                 'color' => $this->getPriorityColor($schedule->priority ?? 'not_important'),
             ];
         });
+
         return view('calendar', ['events' => $schedules]);
     }
 
     private function getPriorityColor($priority)
     {
-        return match($priority) {
+        return match ($priority) {
             'very_important' => '#EF4444', // Merah
             'important' => '#F59E0B',      // Kuning
             'not_important' => '#3B82F6',  // Biru

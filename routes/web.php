@@ -87,6 +87,8 @@ Route::middleware(['auth', 'userMiddleware'])->group(function () {
         return response()->json($users);
     });
 
+    Route::get('/calendar', [App\Http\Controllers\ScheduleController::class, 'showCalendar'])->name('calendar');
+
     // Rute Google Calendar
     Route::get('/google/authorize', [GoogleCalendarController::class, 'authorize'])->name('google.authorize');
     Route::get('/google/callback', [GoogleCalendarController::class, 'callback'])->name('google.callback');
@@ -118,7 +120,7 @@ Route::resource('homepage-contents', HomepageContentController::class)
 
 
 // Route untuk halaman kalender
-Route::get('/calendar', [App\Http\Controllers\ScheduleController::class, 'showCalendar'])->name('calendar');
+
 
 
 
