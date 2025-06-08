@@ -6,7 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Welcome to Nugas Yuk!</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}" />
     @vite('resources/css/app.css')
+
     <style>
         .sticky-header {
             position: fixed;

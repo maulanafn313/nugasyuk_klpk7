@@ -1,15 +1,7 @@
-/* @import '@fullcalendar/core/main.css';
-@import '@fullcalendar/daygrid/main.css';
-@import '@fullcalendar/timegrid/main.css'; */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-
-
-    /* Sesuaikan warna tombol di FullCalendar */
+ /* Sesuaikan warna tombol di FullCalendar */
     .fc-button {
         background-color: #007bff; /* Warna biru */
         color: white;

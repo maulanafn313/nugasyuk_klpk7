@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ $title ?? config('app.name', 'Nugas Yuk!') }}</title>
-    @vite('resources/css/app.css')
+    @vite('resources/css/')
 </head>
 
 <body class="font-sans bg-gray-50 min-h-screen flex flex-col">

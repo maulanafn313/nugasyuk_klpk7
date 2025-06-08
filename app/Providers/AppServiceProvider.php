@@ -4,9 +4,10 @@ namespace App\Providers;
 
 use App\Models\User;
 
-use Illuminate\Pagination\Paginator;
 use App\Models\Schedule;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
@@ -76,5 +77,10 @@ class AppServiceProvider extends ServiceProvider
             // Share ke semua view
             $view->with('notifications', $notifications);
         });
+
+        // if(config('app.env') === 'local')
+        // {
+        //     URL::forceScheme('https');
+        // }
     }
 }
